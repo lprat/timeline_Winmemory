@@ -1,0 +1,13 @@
+--- /opt/volatility3/volatility/cli/text_renderer.py	2021-01-11 15:29:58.243962095 +0000
++++ /opt/volatility3.new/volatility/cli/text_renderer.py	2021-01-11 15:19:44.429083920 +0000
+@@ -170,7 +170,10 @@
+                 column = grid.columns[column_index]
+                 renderer = self._type_renderers.get(column.type, self._type_renderers['default'])
+                 line.append(renderer(node.values[column_index]))
+-            accumulator.write("{}".format("\t".join(line)))
++            try:
++                accumulator.write("{}".format("\t".join(line)))
++            except:
++                accumulator.write("{}".format("\t".join(line).encode('utf-8').decode("ascii","ignore")))
+             accumulator.flush()
+             return accumulator
