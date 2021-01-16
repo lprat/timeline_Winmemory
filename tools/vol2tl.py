@@ -21,39 +21,39 @@ driverx={}
 driverirpx={}
 
 if os.path.isfile('/db-ipbl.json'):
-    with open("/db-ipbl.json") as fp:
+    with open("/db-ipbl.json", encoding='utf-8') as fp:
         try:
             firehol = json.load(fp)
         except Exception as err:
             print("Error to open: /db-ipbl.json")
-with open("/tmp/results/listfiles.json") as fp:
+with open("/tmp/results/listfiles.json", encoding='utf-8') as fp:
     try:
         filex = json.load(fp)
     except Exception as err:
         print("Error to open: /tmp/results/listfiles.json")
-with open("/tmp/results/listmodules.json") as fp:
+with open("/tmp/results/listmodules.json", encoding='utf-8') as fp:
     try:
         modulez = json.load(fp)
     except Exception as err:
         print("Error to open: /tmp/results/listmodules.json")
-with open("/tmp/results/driverscan.json") as fp:
+with open("/tmp/results/driverscan.json", encoding='utf-8') as fp:
     try:
         driverx = json.load(fp)
     except Exception as err:
         print("Error to open: /tmp/results/driverscan.json")
-with open("/tmp/results/driverirp.json") as fp:
+with open("/tmp/results/driverirp.json", encoding='utf-8') as fp:
     try:
         driverirpx = json.load(fp)
     except Exception as err:
         print("Error to open: /tmp/results/driverirp.json ")
-with open("/tmp/results/svcscan-sid.json") as fp:
+with open("/tmp/results/svcscan-sid.json", encoding='utf-8') as fp:
     try:
         serv_sid = json.load(fp)
     except Exception as err:
         print("Error to open: /tmp/results/svcscan-sid.json")
 cfiles={"/tmp/results/psscan.json": "proc", "/tmp/results/cmdline.json": "cmdline", "/tmp/results/env.json": "env", "/tmp/results/netscan.json": "netscan", "/tmp/results/priv.json": "priv", "/tmp/results/handle.json": "handle", "/tmp/results/vadinfo.json": "vad", "/tmp/results/dlllist.json": "dlllist", "/tmp/results/malfind.json": "malfind", "/tmp/results/yara.json": "yara", "/tmp/results/yara-malconf.json": "yara"}
 for k,v in cfiles.items():
-    with open(k) as fp:
+    with open(k, encoding='utf-8') as fp:
         try:
             ds = json.load(fp)
             for d in ds:
@@ -83,9 +83,12 @@ for k,v in cfiles.items():
                 if v=='yara':
                     if 'YaraFound' not in db[pid]['tag']:
                         db[pid]['tag'].append('YaraFound')
+                    if 'malconf' in k:
+                        if 'YaraMalConf' not in db[pid]['tag']:
+                            db[pid]['tag'].append('YaraMalConf')
                     if 'MalwareInfo' not in db[pid]:
                         db[pid]['MalwareInfo'] = []
-                    val=bytes.fromhex(d['Value'].replace('00','').replace(' ','')).decode('utf-8')
+                    val=bytes.fromhex(d['Value'].replace('00','').replace(' ','')).decode('utf-8',"ignore")
                     if 'YaraMemScan|'+d['Rule']+'|'+val not in db[pid]['MalwareInfo']:
                         db[pid]['MalwareInfo'].append('YaraMemScan|'+d['Rule']+'|'+val)
                     continue
@@ -343,7 +346,7 @@ for k,v in cfiles.items():
         except Exception as err:
             print("Error to open: "+k+" -- "+str(err))
             traceback.print_exc(file=sys.stdout)
-with open("/tmp/results/modscan.json") as fp:
+with open("/tmp/results/modscan.json", encoding='utf-8') as fp:
     try:
         ds = json.load(fp)
         for d in ds:
@@ -437,7 +440,7 @@ with open("/tmp/results/modscan.json") as fp:
     except Exception as err:
         print("Error to open: /tmp/results/modscan.json"+" -- "+str(err))
         traceback.print_exc(file=sys.stdout)
-with open("/tmp/results/clamavresults.log") as fp:
+with open("/tmp/results/clamavresults.log", encoding='utf-8') as fp:
     for line in fp:
         res=line.strip().split(':')
         if res[0] in filex['pi']:
@@ -459,7 +462,7 @@ with open("/tmp/results/clamavresults.log") as fp:
                         db_mod[k]['MalwareInfo'].append('ClamScan|'+res[1].strip())
         else:
             print("Error to found file clamav: "+line)
-with open("/tmp/results/lokiresults.log") as fp:
+with open("/tmp/results/lokiresults.log", encoding='utf-8') as fp:
     r=re.compile(",FileScan,FILE:\s+(?P<path>.*)\s+SCORE:\s+.*\s+Yara Rule MATCH:\s+(?P<rule>.*)\s+SUBSCORE:\s+.*\s+(MATCHES:\s+(?P<strings>.*)$)?")
     for line in fp:
         if not ',FileScan,FILE:' in line:
@@ -500,9 +503,9 @@ with open("/tmp/results/lokiresults.log") as fp:
                                 db_mod[k]['MalwareInfo'].append(val)
                 else:
                     print("Error to found file loki: "+line)
-fjsonl = open("/tmp/results/vol.jsonl", "a")
+fjsonl = open("/tmp/results/vol.jsonl", "a", encoding='utf-8')
 now = datetime.now()
-with open("/tmp/results/netscan.json") as fp:
+with open("/tmp/results/netscan.json", encoding='utf-8') as fp:
     try:
         ds = json.load(fp)
         for d in ds:
@@ -557,16 +560,16 @@ with open("/tmp/results/netscan.json") as fp:
     except Exception as err:
         print("Error to open: /tmp/results/netscan.json"+" -- "+str(err))
         traceback.print_exc(file=sys.stdout)
-with open("/tmp/results/yaranousedproc.json") as fp:
+with open("/tmp/results/yaranousedproc.json", encoding='utf-8') as fp:
     try:
         ds = json.load(fp)
         for d in ds:
             #write direct in jsonl
-            jsonl = {"message": d['Rule']+' -- '+bytes.fromhex(d['Value'].replace('00','').replace(' ','')).decode('utf-8'), "timestamp_desc": "Yara out of proc", "tag":['YaraFound']}
+            jsonl = {"message": d['Rule']+' -- '+bytes.fromhex(d['Value'].replace('00','').replace(' ','')).decode('utf-8',"ignore"), "timestamp_desc": "Yara out of proc", "tag":['YaraFound']}
             jsonl["Yara_Rule"] = d["Rule"]
             jsonl["Yara_offset"] = str(d["Offset"])
             jsonl["Yara_ValueHex"] = d["Value"]
-            jsonl["Yara_ValueAscii"] = bytes.fromhex(d['Value'].replace('00','').replace(' ','')).decode('utf-8')
+            jsonl["Yara_ValueAscii"] = bytes.fromhex(d['Value'].replace('00','').replace(' ','')).decode('utf-8',"ignore")
             date = now
             try:
                 date = datetime.strptime(date_deb, "%Y-%m-%dT%H%M%S")
@@ -580,7 +583,7 @@ with open("/tmp/results/yaranousedproc.json") as fp:
     except Exception as err:
         print("Error to open: /tmp/results/yaranousedproc.json"+" -- "+str(err))
         traceback.print_exc(file=sys.stdout)
-with open("/tmp/results/svcscan.json") as fp:
+with open("/tmp/results/svcscan.json", encoding='utf-8') as fp:
     try:
         ds = json.load(fp)
         for d in ds:

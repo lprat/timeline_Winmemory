@@ -10,6 +10,7 @@ Idea based on calamity: https://github.com/Hestat/calamity
   - Volatility3: https://github.com/volatilityfoundation/volatility3
   - Malconf: https://github.com/JPCERTCC/MalConfScan
   - firehol: https://github.com/firehol/firehol
+  - capa and floss: https://github.com/fireeye
 
 ## Build
 
@@ -48,6 +49,7 @@ You can import timeline in timesketch to make fast analyze:
 
   - Firehol: Connexion use
   - YaraFound: Yara rule detected in memory, more informations in field "MalwareInfo"
+  - YaraMalConf: Yara Malconf rule detected in memory, more informations in field "MalwareInfo"
   - ProcMalfind: Vol malfind found
   - PeInjected: Pe in memory, more informations in field "MalwareInfo"
   - DllSuspect: Dll with path or name suspect
