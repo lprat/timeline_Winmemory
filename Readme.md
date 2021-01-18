@@ -68,13 +68,10 @@ You can import timeline in timesketch to make fast analyze:
   - Linked_with_SuspectDriver: Service realtionship with suspect module
   - Autorun: service runned at windows start
   - Running: service in running
-  
-  - IRPSuspect: TODO
   - Driver_in_Proc: TODO
 
 ## TODO List:
  - Impscan, apihook
  - https://github.com/hasherezade/pe-sieve/wiki use it on vad extract
- - IRP list risk (tag)
  - PE info risk (tag)
  - Proc use driver (handle) make link
