@@ -374,9 +374,9 @@ with open("/tmp/results/modscan.json", encoding='utf-8') as fp:
                             db_mod[d['Path']]['Driver Path']=[]
                         if 'Name' in driv and driv['Name'] not in db_mod[d['Path']]['Driver Path']:
                             db_mod[d['Path']]['Driver Path'].append(driv['Name'])
-            if d['Path'].lower().endswith('.sys') and '\\System32\\drivers\\' in d['Path'].lower():
+            if d['Path'].lower().endswith('.sys') and '\\system32\\drivers\\' in d['Path'].lower():
                 suspect=False
-            elif d['Path'].lower().endswith('.dll') and '\\System32\\' in d['Path'].lower():
+            elif d['Path'].lower().endswith('.dll') and '\\system32\\' in d['Path'].lower():
                 suspect=False
             elif '\\SystemRoot\\system32\\ntoskrnl.exe' == d['Path']:
                 suspect=False
