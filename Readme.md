@@ -54,6 +54,7 @@ You can import timeline in timesketch to make fast analyze:
   - PeInjected: Pe in memory, more informations in field "MalwareInfo"
   - DllSuspect: Dll with path or name suspect
   - NetUse: Process use network
+  - MutantUse: Process use mutant
   - NetBind: Process Bind socket
   - ProcLegalSuspect: Process legal but can be used to malicious action
   - ProcSuspect: Process with path or name suspect

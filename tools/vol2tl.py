@@ -251,6 +251,8 @@ for k,v in cfiles.items():
                         db[pid]['Handle'] = []
                     if 'Name' in d and d['Name'] and 'Type' in d and d['Type'] and d['Type']+"|"+d['Name'] not in db[pid]['Handle']:
                         db[pid]['Handle'].append(d['Type']+"|"+d['Name'])
+                        if d['Type'] == 'Mutant' and "MutantUse" not in db[pid]['tag']:
+                            db[pid]['tag'].append("MutantUse")
                     continue
                 if v=='netscan':
                     if not "LISTENING" in d['State']:
