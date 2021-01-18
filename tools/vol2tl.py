@@ -218,13 +218,13 @@ for k,v in cfiles.items():
                                 if peimp:
                                     if 'PEImport' not in db[pid]:
                                         db[pid]['PEImport'] = []
-                                    db[pid]['PEImport'] = peimp
-                                    db[pid]['PEImport']=list(set(db[pid]['PEImport']))
+                                    files_info['PEImport'] = peimp
+                                    files_info['PEImport']=list(set(files_info['PEImport']))
                                 if peexp:
                                     if 'PEExport' not in db[pid]:
                                         db[pid]['PEExport'] = []
-                                    db[pid]['PEExport'] = peexp
-                                    db[pid]['PEExport']=list(set(db[pid]['PEExport']))
+                                    files_info['PEExport'] = peexp
+                                    files_info['PEExport']=list(set(files_info['PEExport']))
                                 if hasattr(pe, 'FileInfo'):
                                     for fileinfo in pe.FileInfo:
                                         fileinfo = fileinfo[0]
@@ -236,6 +236,10 @@ for k,v in cfiles.items():
                                     if 'DllSuspect' not in db[pid]:
                                         db[pid]['DllSuspect'] = []
                                     db[pid]['DllSuspect'].append(d['Name']+'|'+str(files_info))
+                                else:
+                                    if 'DllSuspect' not in db[pid]:
+                                        db[pid]['DllSuspect'] = []
+                                        db[pid]['DllSuspect'].append(d['Name']+'|NotPeInfo')
                             except Exception as e:
                                 print("[-] PEFormatError: %s" % str(e))
                     continue
@@ -328,6 +332,9 @@ for k,v in cfiles.items():
                                     if kx+"=="+vx not in db[pid]['PeInfo']:
                                         #TODO tag if internalname != ImageFileName | not microsoft
                                         db[pid]['PeInfo'].append(kx+"=="+vx)
+                            else:
+                                if "NotPeInfo" not in db[pid]['tag']:
+                                    db[pid]['tag'].append("NotPeInfo")
                         except Exception as e:
                             print("[-] PEFormatError: %s" % str(e))
                 if 'CreateTime' in d and d['CreateTime'] and 'CreateTime' not in db[pid]:
@@ -438,6 +445,9 @@ with open("/tmp/results/modscan.json", encoding='utf-8') as fp:
                         if kx+"=="+vx not in db_mod[d['Path']]['PeInfo']:
                             #TODO tag if internalname != ImageFileName | not microsoft
                             db_mod[d['Path']]['PeInfo'].append(kx+"=="+vx)
+                else:
+                    if "NotPeInfo" not in db_mod[d['Path']]['tag']:
+                        db_mod[d['Path']]['tag'].append("NotPeInfo")
             except Exception as e:
                 print("[-] PEFormatError: %s" % str(e))
     except Exception as err:

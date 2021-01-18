@@ -58,6 +58,7 @@ You can import timeline in timesketch to make fast analyze:
   - NetBind: Process Bind socket
   - ProcLegalSuspect: Process legal but can be used to malicious action
   - ProcSuspect: Process with path or name suspect
+  - NotPeInfo: Process or module dont contains PeInfo
   - ModSuspect: Module with path or name suspect
   - ClamFound: Clamav detect thret on Module or Process, more informations in field "MalwareInfo"
   - LokiFound: Loki detect thret on Module or Process, more informations in field "MalwareInfo"
