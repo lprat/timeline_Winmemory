@@ -167,7 +167,7 @@ timeout -v $timestop python3 /opt/tools/vadinfo.py /tmp/results/vadinfo.json $1 
 echo "Wait end of process in background $(date)"
 wait
 find /tmp/results/ -iname '*.err' -size 0 -print -delete > /dev/null 2> /dev/null
-for p in $(ls /tmp/results/*.err);do if ! grep -iE 'line [0-9]+, in <|timeout:' $p > /dev/null ;then rm $p ;else echo Error during scan more info: $p;fi ;done
+for p in $(ls /tmp/results/*.err);do if ! grep -iE 'line [0-9]+, in <|timeout:|faulty layer implementation' $p > /dev/null ;then rm $p ;else echo Error during scan more info: $p;fi ;done
 echo "Create Timeline"
 python3 /opt/tools/vol2tl.py $1 2> /tmp/results/createtl.err
 echo "Finish!"

@@ -43,7 +43,7 @@ RUN apt-get update && apt-get install --no-install-recommends -y \
 RUN pip install wheel
 RUN pip install yara-python psutil netaddr pylzma colorama
 RUN pip3 install wheel
-RUN pip3 install -U pefile capstone distorm3 iocextract
+RUN pip3 install -U pefile capstone distorm3 iocextract pycryptodome jsonschema
 
 RUN cd /tmp && \
     git clone --recursive https://github.com/VirusTotal/yara-python && \

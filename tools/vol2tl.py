@@ -588,7 +588,9 @@ with open("/tmp/results/svcscan.json", encoding='utf-8') as fp:
         ds = json.load(fp)
         for d in ds:
             #write direct in jsonl
-            msg=d['Name']
+            msg=""
+            if "Name" in d and d["Name"]:
+                msg=d['Name']
             if "Display" in d and d["Display"]:
                 msg+=' -- '+d['Display']
             if "Binary" in d and d["Binary"]:
