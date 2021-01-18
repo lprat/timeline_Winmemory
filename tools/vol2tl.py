@@ -191,7 +191,7 @@ for k,v in cfiles.items():
                             suspect=True
                             if "DllSuspect" not in db[pid]['tag']:
                                 db[pid]['tag'].append("DllSuspect")
-                        if 'File output' in d and d['File output'].endswith('.dmp') and suspect:
+                        if 'File output' in d and d['File output'].endswith('.dmp'):
                             pepath=filex['pa'][d['File output']]
                             try:
                                 pe = pefile.PE(pepath)
@@ -232,14 +232,40 @@ for k,v in cfiles.items():
                                             for st in fileinfo.StringTable:
                                                 for entry in st.entries.items():
                                                     files_info[entry[0].decode("ascii","ignore")] = entry[1].decode("ascii","ignore")
-                                if files_info:
+                                if files_info and suspect:
                                     if 'DllSuspect' not in db[pid]:
                                         db[pid]['DllSuspect'] = []
                                     db[pid]['DllSuspect'].append(d['Name']+'|'+str(files_info))
-                                else:
+                                    if 'OriginalFilename' in files_info or 'InternalName' in files_info:
+                                        samename=False
+                                        if 'InternalName' in files_info and files_info['InternalName'].lower() == d['Name'].lower():
+                                            samename=True
+                                        elif 'OriginalFilename' in files_info and files_info['OriginalFilename'].lower() == d['Name'].lower():
+                                            samename=True
+                                        if not samename:
+                                            if "DllPeNameDiff" not in db[pid]['tag']:
+                                                db[pid]['tag'].append("DllPeNameDiff")
+                                elif files_info:
+                                    if 'DllInfo' not in db[pid]:
+                                        db[pid]['DllInfo'] = []
+                                    db[pid]['DllInfo'].append(d['Name']+'|'+str(files_info))
+                                    if 'OriginalFilename' in files_info or 'InternalName' in files_info:
+                                        samename=False
+                                        if 'InternalName' in files_info and files_info['InternalName'].lower() == d['Name'].lower():
+                                            samename=True
+                                        elif 'OriginalFilename' in files_info and files_info['OriginalFilename'].lower() == d['Name'].lower():
+                                            samename=True
+                                        if not samename:
+                                            if "DllPeNameDiff" not in db[pid]['tag']:
+                                                db[pid]['tag'].append("DllPeNameDiff")
+                                elif suspect:
                                     if 'DllSuspect' not in db[pid]:
                                         db[pid]['DllSuspect'] = []
-                                        db[pid]['DllSuspect'].append(d['Name']+'|NotPeInfo')
+                                    db[pid]['DllSuspect'].append(d['Name']+'|NotPeInfo')
+                                else:
+                                    if 'DllInfo' not in db[pid]:
+                                        db[pid]['DllInfo'] = []
+                                    db[pid]['DllInfo'].append(d['Name']+'|NotPeInfo')
                             except Exception as e:
                                 print("[-] PEFormatError: %s" % str(e))
                     continue
@@ -328,6 +354,15 @@ for k,v in cfiles.items():
                             if files_info:
                                 if 'PeInfo' not in db[pid]:
                                     db[pid]['PeInfo'] = []
+                                if 'OriginalFilename' in files_info or 'InternalName' in files_info:
+                                    samename=False
+                                    if 'InternalName' in files_info and files_info['InternalName'].lower() == d['ImageFileName'].lower():
+                                        samename=True
+                                    elif 'OriginalFilename' in files_info and files_info['OriginalFilename'].lower() == d['ImageFileName'].lower():
+                                        samename=True
+                                    if not samename:
+                                        if "PeNameDiff" not in db[pid]['tag']:
+                                            db[pid]['tag'].append("PeNameDiff")
                                 for kx,vx in files_info.items():
                                     if kx+"=="+vx not in db[pid]['PeInfo']:
                                         #TODO tag if internalname != ImageFileName | not microsoft
@@ -441,6 +476,15 @@ with open("/tmp/results/modscan.json", encoding='utf-8') as fp:
                 if files_info:
                     if 'PeInfo' not in db_mod[d['Path']]:
                         db_mod[d['Path']]['PeInfo'] = []
+                    if 'OriginalFilename' in files_info or 'InternalName' in files_info:
+                        samename=False
+                        if 'InternalName' in files_info and files_info['InternalName'].lower() == d['Name'].lower():
+                            samename=True
+                        elif 'OriginalFilename' in files_info and files_info['OriginalFilename'].lower() == d['Name'].lower():
+                            samename=True
+                        if not samename:
+                            if "PeNameDiff" not in db_mod[d['Path']]['tag']:
+                                db_mod[d['Path']]['tag'].append("PeNameDiff")
                     for kx,vx in files_info.items():
                         if kx+"=="+vx not in db_mod[d['Path']]['PeInfo']:
                             #TODO tag if internalname != ImageFileName | not microsoft

@@ -59,6 +59,8 @@ You can import timeline in timesketch to make fast analyze:
   - ProcLegalSuspect: Process legal but can be used to malicious action
   - ProcSuspect: Process with path or name suspect
   - NotPeInfo: Process or module dont contains PeInfo
+  - PeNameDiff: Process or module have name different of Peinfo Original or Internal
+  - DllPeNameDiff: Dll have name different of Peinfo Original or Internal
   - ModSuspect: Module with path or name suspect
   - ClamFound: Clamav detect thret on Module or Process, more informations in field "MalwareInfo"
   - LokiFound: Loki detect thret on Module or Process, more informations in field "MalwareInfo"
@@ -74,5 +76,4 @@ You can import timeline in timesketch to make fast analyze:
 ## TODO List:
  - Impscan, apihook
  - https://github.com/hasherezade/pe-sieve/wiki use it on vad extract
- - PE info risk (tag)
  - Proc use driver (handle) make link
