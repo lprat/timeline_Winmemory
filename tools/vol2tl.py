@@ -180,7 +180,7 @@ for k,v in cfiles.items():
                                 db[pid]['PeInjected'].append(str(peinfox))
                             except Exception as err:
                                 print("Error to open: "+'/tmp/results/'+fnamex+'.peinfo')
-                    if os.path.isfile('/tmp/results/'+fnamex+'.peinfo'):
+                    if os.path.isfile('/tmp/results/'+fnamex+'.impscan'):
                         if 'PeImpScan' not in db[pid]['tag']:
                             db[pid]['tag'].append('PeImpScan')
                         with open('/tmp/results/'+fnamex+'.impscan') as yfp:
