@@ -66,12 +66,12 @@ with open('/tmp/results/dlllist.json', encoding='utf-8') as fp:
             if pid not in dlllist:
                 dlllist[pid]={}
             if 'Path' in d and d['Path'] and 'File output' in d and d['File output'].endswith('.dmp'):
-                if d['Path'] not in dlllist[pid]:
-                    dlllist[pid][d['Path']]={'base':None}
-                if 'Base' in d and d['Base'] and not dlllist[pid][d['Path']]['base']:
-                    dlllist[pid][d['Path']]['base']=d['Base']
-                if  not d['File output'] not in dlllist[pid][d['Path']]['File output']:
-                    dlllist[pid][d['Path']]['File output']=filex['pa'][d['File output']]
+                #    if d['Path'] not in dlllist[pid]:
+                #        dlllist[pid][d['Path']]={'base':d['Base'], 'File output': filex['pa'][d['File output']]}
+                if d['Base'] not in dlllist[pid]:
+                    dlllist[pid][d['Base']]={'Path':d['Path'], 'File output': filex['pa'][d['File output']]}
+                else:
+                    print('Error base already exist')
     except Exception as err:
         print("Error to open: /tmp/results/dlllist.json"+" -- "+str(err))
         traceback.print_exc(file=sys.stdout)
@@ -83,8 +83,8 @@ with open(sys.argv[1]) as fp:
         pid=d['PID']
         if pid not in modules:
             modules[pid]={}
-        if pid in dlllist and 'File' in d and d['File'] and d['File'] in dlllist[pid]:
-            modules[pid][d['File']]={'vstart':d['Start VPN'],'vend':d['End VPN'],'path':dlllist[pid][d['File']]['File output']}
+        if pid in dlllist and 'File' in d and d['File'] and d['Start VPN'] in dlllist[pid]:
+            modules[pid][d['File']]={'vstart':d['Start VPN'],'vend':d['End VPN'],'File output':dlllist[pid][d['Start VPN']]['File output']}
         elif 'File' in d and d['File']:
             #indicate DLL used and number of func
             modules[pid][d['File']]={'vstart':d['Start VPN'],'vend':d['End VPN']}
@@ -198,49 +198,53 @@ with open(sys.argv[1]) as fp:
                                 reg_redirect[str(op.operands[0])] =op.operands[1].disp
                             if op.mnemonic == "CALL" and op.operands[0].type == 'Register':
                                 iat_loc = reg_redirect[str(op.operands[0])]
-                            if (not iat_loc or
-                                (iat_loc < base_address) or
-                                (iat_loc > end_address)):
-                                continue
-                            addr=get_addr('/tmp/analyze/dumpvad/pid.'+str(d['PID'])+'.vad.'+hex_string+'-'+hex_string2+'.dmp',iat_loc-base_address,modeadr)
-                            if iat_loc not in iat_ptr:
-                                iat_ptr[iat_loc]=int(addr, 16)
-                            elif int(addr, 16) != iat_ptr[iat_loc]:
-                                print("DEBUG error IAT 0x%08x -> 0x%08x vs 0x%08x" % (iat_loc, addr, iat_ptr[iat_loc]))
-                        #list func
-                        if iat_ptr and d['PID'] in modules and modules[d['PID']]:
-                            if d['PID'] not in exports:
-                                exports[d['PID']]={}
-                                for kmx,vmx in modules[d['PID']]:
-                                    #kmw = path DLL
-                                    if 'File output' in vmx:
+                        if (not iat_loc or
+                            (iat_loc < base_address) or
+                            (iat_loc > end_address)):
+                            continue
+                        addr=get_addr('/tmp/analyze/dumpvad/pid.'+str(d['PID'])+'.vad.'+hex_string+'-'+hex_string2+'.dmp',iat_loc-base_address,modeadr)
+                        if iat_loc not in iat_ptr:
+                            iat_ptr[iat_loc]=int(addr, 16)
+                        elif int(addr, 16) != iat_ptr[iat_loc]:
+                            print("DEBUG error IAT 0x%08x -> 0x%08x vs 0x%08x" % (iat_loc, addr, iat_ptr[iat_loc]))
+                    #list func
+                    if iat_ptr and d['PID'] in modules and modules[d['PID']]:
+                        if d['PID'] not in exports:
+                            exports[d['PID']]={}
+                            for kmx,vmx in modules[d['PID']].items():
+                                #kmx = path DLL
+                                if 'File output' in vmx:
+                                    try:
                                         dll=pefile.PE(vmx['File output'])
-                                        if hasattr(pe, 'DIRECTORY_ENTRY_EXPORT'):
-                                            if exp.name and exp.address:
-                                                adrx=exp.address+vmx['base']
-                                                namedll=None
-                                                try:
-                                                    namedll=kmx.split('\\')[-1]
-                                                except:
-                                                    namedll=kmx
-                                                exports[d['PID']][adrx]={'func':exp.name.decode(errors='replace'), 'dll':namedll}
-                        for k,v in iat_ptr.items():
-                            #print("IAT 0x%08x -> 0x%08x" % (k, v))
-                            if d['PID'] in exports and exports[d['PID']] and v in exports[d['PID']]:
-                                #Func found
-                                impscan[v]=exports[d['PID']][v]
-                            elif d['PID'] in modules and modules[d['PID']]:
-                                for kmx,vmx in modules[d['PID']]:
-                                    #kmw = path DLL
-                                    if v > vmx['vstart'] and vmx['vend'] < v:
-                                        #Ok dll found, but not found function
-                                        #command: "objdump -x -D"
-                                        namedll=None
-                                        try:
-                                            namedll=kmx.split('\\')[-1]
-                                        except:
-                                            namedll=kmx
-                                        impscan[v]={'func':'Not found', 'dll':namedll}
+                                        if hasattr(dll, 'DIRECTORY_ENTRY_EXPORT'):
+                                            for exp in dll.DIRECTORY_ENTRY_EXPORT.symbols:
+                                                if exp.name and exp.address:
+                                                    adrx=exp.address+vmx['vstart']
+                                                    namedll=None
+                                                    try:
+                                                        namedll=kmx.split('\\')[-1]
+                                                    except:
+                                                        namedll=kmx
+                                                    exports[d['PID']][adrx]={'func':exp.name.decode(errors='replace'), 'dll':namedll}
+                                    except Exception as err:
+                                        print('Error to open dll('+vmx['File output']+'):'+str(err))
+                    for k,v in iat_ptr.items():
+                        #print("IAT 0x%08x -> 0x%08x" % (k, v))
+                        if d['PID'] in exports and exports[d['PID']] and v in exports[d['PID']]:
+                            #Func found
+                            impscan[v]=exports[d['PID']][v]
+                        elif d['PID'] in modules and modules[d['PID']]:
+                            for kmx,vmx in modules[d['PID']].items():
+                                #kmw = path DLL
+                                if vmx['vstart'] <= v <= vmx['vend']:
+                                    #Ok dll found, but not found function
+                                    #command: "objdump -x -D"
+                                    namedll=None
+                                    try:
+                                        namedll=kmx.split('\\')[-1]
+                                    except:
+                                        namedll=kmx
+                                    impscan[v]={'func':'Not found', 'dll':namedll}
                 if peimp:
                     files_info['PEImport']=peimp
                 if peexp:
