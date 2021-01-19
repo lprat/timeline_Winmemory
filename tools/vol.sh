@@ -141,6 +141,11 @@ timeout -v $timestop python3 /opt/tools/volatility3/vol.py -f $1 -r json windows
 timeout -v $timestop python3 /opt/tools/volatility3/vol.py -f $1 -r json windows.driverirp > /tmp/results/driverirp.json 2> /tmp/results/driverirp.err &
 #mem usage:
 #python3 /opt/tools/volatility3/vol.py -f $1 -r json windows.virtmap.VirtMap > /tmp/results/virtmap.json &
+#yara scan mem
+(timeout -v $timestop python3 /opt/tools/volatility3/vol.py -r json -f $1 windows.vadyarascan.VadYaraScan --wide --yara-file /opt/rules/base.yar > /tmp/results/yara.json  2> /tmp/results/yara.err  )&
+(timeout -v $timestop python3 /opt/tools/volatility3/vol.py -r json -f $1 windows.vadyarascan.VadYaraScan --wide --yara-file /opt/rules/malconfscan.yar > /tmp/results/yara-malconf.json 2> /tmp/results/yara-malconf.err  )&
+#yara scan mem no used by proc
+(timeout -v $timestop python3 /opt/tools/volatility3/vol.py -r json -f $1 yarascan.YaraScan --wide --yara-file /opt/rules/base.yar > /tmp/results/yaranousedproc.json  2> /tmp/results/yaranousedproc.err  )&
 #process lancé avec la ligne de commande
 timeout -v $timestop python3 /opt/tools/volatility3/vol.py -f $1 -r json windows.cmdline.CmdLine  > /tmp/results/cmdline.json 2> /tmp/results/cmdline.err &
 timeout -v $timestop python3 /opt/tools/volatility3/vol.py -r json -o /tmp/analyze/dump/ -f $1 windows.psscan.PsScan --dump > /tmp/results/psscan.json 2> /tmp/results/psscan.err
@@ -156,11 +161,6 @@ timeout -v $timestop python3 /opt/tools/changename.py /tmp/results/psscan.json /
 #scan file
 (timeout -v $timestop clamscan -ir --no-summary --max-filesize=800M --max-scansize=800M /tmp/analyze/dump/  | tee -a /tmp/results/clamavresults.log) &
 timeout -v $timestop python /opt/tools/Loki/loki.py --dontwait --intense -l /tmp/results/lokiresults.log -s 100000 -p /tmp/analyze/dump/ --csv > /tmp/results/loki.log 2> /tmp/results/loki.err &
-#yara scan mem
-(timeout -v $timestop python3 /opt/tools/volatility3/vol.py -r json -f $1 windows.vadyarascan.VadYaraScan --wide --yara-file /opt/rules/base.yar > /tmp/results/yara.json  2> /tmp/results/yara.err  )&
-(timeout -v $timestop python3 /opt/tools/volatility3/vol.py -r json -f $1 windows.vadyarascan.VadYaraScan --wide --yara-file /opt/rules/malconfscan.yar > /tmp/results/yara-malconf.json 2> /tmp/results/yara-malconf.err  )&
-#yara scan mem no used by proc
-(timeout -v $timestop python3 /opt/tools/volatility3/vol.py -r json -f $1 yarascan.YaraScan --wide --yara-file /opt/rules/base.yar > /tmp/results/yaranousedproc.json  2> /tmp/results/yaranousedproc.err  )&
 #Check proc with vad
 mkdir /tmp/analyze/dumpvad/
 timeout -v $timestop python3 /opt/tools/vadinfo.py /tmp/results/vadinfo.json $1 > /tmp/results/vadinfopy.log  2> /tmp/results/vadinfopy.err
