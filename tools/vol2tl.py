@@ -312,7 +312,7 @@ for k,v in cfiles.items():
                             db[pid]['NetBind'].append(d['Proto']+"|"+d['LocalAddr']+":"+str(d['LocalPort']))
                     #firehol
                     if firehol:
-                        if not ipaddress.ip_address(d["ForeignAddr"]).is_private and d["ForeignAddr"] in firehol:
+                        if d["ForeignAddr"] != '*' and not ipaddress.ip_address(d["ForeignAddr"]).is_private and d["ForeignAddr"] in firehol:
                             if "Firehol" not in db[pid]['tag']:
                                 db[pid]['tag'].append("Firehol")
                             if not 'firehol' in db[pid]:
@@ -616,7 +616,7 @@ with open("/tmp/results/netscan.json", encoding='utf-8') as fp:
             jsonl["file_generator"] = "Volutility netscan"
             #firehol
             if firehol:
-                if not ipaddress.ip_address(d["ForeignAddr"]).is_private and d["ForeignAddr"] in firehol:
+                if d["ForeignAddr"] != '*' and not ipaddress.ip_address(d["ForeignAddr"]).is_private and d["ForeignAddr"] in firehol:
                     jsonl["tag"].append("Firehol")
                     if not 'firehol' in jsonl:
                         jsonl["firehol"] = []
