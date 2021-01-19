@@ -52,6 +52,7 @@ You can import timeline in timesketch to make fast analyze:
   - YaraMalConf: Yara Malconf rule detected in memory, more informations in field "MalwareInfo"
   - ProcMalfind: Vol malfind found
   - PeInjected: Pe in memory, more informations in field "MalwareInfo"
+  - PeImpScan: Pe impscan, more informations in field "PEImpScan"
   - DllSuspect: Dll with path or name suspect
   - NetUse: Process use network
   - MutantUse: Process use mutant
@@ -74,6 +75,6 @@ You can import timeline in timesketch to make fast analyze:
   - Driver_in_Proc: TODO
 
 ## TODO List:
- - Impscan, apihook
+ - apihook
  - https://github.com/hasherezade/pe-sieve/wiki use it on vad extract
  - Proc use driver (handle) make link

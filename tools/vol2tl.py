@@ -179,7 +179,18 @@ for k,v in cfiles.items():
                                     db[pid]['PeInjected']=[]
                                 db[pid]['PeInjected'].append(str(peinfox))
                             except Exception as err:
-                                print("Error to open: "+'/tmp/results/'+d['File output']+'.peinfo')
+                                print("Error to open: "+'/tmp/results/'+fnamex+'.peinfo')
+                    if os.path.isfile('/tmp/results/'+fnamex+'.peinfo'):
+                        if 'PeImpScan' not in db[pid]['tag']:
+                            db[pid]['tag'].append('PeImpScan')
+                        with open('/tmp/results/'+fnamex+'.impscan') as yfp:
+                            try:
+                                peimpscanx = json.load(yfp)
+                                if 'PEImpScan' not in db[pid]:
+                                    db[pid]['PEImpScan']=[]
+                                db[pid]['PEImpScan'].append(str(peimpscanx))
+                            except Exception as err:
+                                print("Error to open: "+'/tmp/results/'+fnamex+'.impscan')
                     continue
                 if v=='dlllist':
                     if 'DllList' not in db[pid]:
