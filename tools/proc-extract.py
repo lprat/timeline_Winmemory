@@ -5,7 +5,7 @@ import shutil
 import json
 import subprocess
 import pefile
-test={}
+
 if len(sys.argv) != 4:
     print("./proc_ana.py path/proscan.json imgpath pid")
     sys.exit()
