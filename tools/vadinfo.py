@@ -114,6 +114,15 @@ with open(sys.argv[1]) as fp:
                 print("Strings for proc:"+str(d['PID']))
                 with open('/tmp/analyze/dumpcon/pid.'+str(d['PID'])+'.vad.'+hex_string+'-'+hex_string2+'.uni', "wb") as text_file:
                     text_file.write(stdout2)
+            process = subprocess.Popen(['cat', '/tmp/analyze/dumpcon/*.floss', '/tmp/results/conhost-data.floss'],
+                     stdout=subprocess.PIPE,
+                     stderr=subprocess.PIPE)
+            stdout2, stderr2 = process.communicate()
+            process = subprocess.Popen(['cat', '/tmp/analyze/dumpcon/*.uni', '/tmp/results/conhost-data.uni'],
+                     stdout=subprocess.PIPE,
+                     stderr=subprocess.PIPE)
+            stdout2, stderr2 = process.communicate()
+            shutil.rmtree('/tmp/analyze/dumpcon/')
         if "PAGE_EXECUTE_READWRITE" in d['Protection'] and not d['File']:
             print(str(d))
             iat_ptr={}

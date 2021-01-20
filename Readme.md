@@ -32,8 +32,8 @@ docker run --rm -ti -v /data/memories_images/:/data/ -v $(pwd)/results:/tmp/resu
 (Optionnal use firehol -> docker run --rm -ti -v /data/memories_images/:/data/ -v $(pwd)/db-ipbl.json:/db-ipbl.json -v $(pwd)/results:/tmp/results/ timeline_winmemory bash)
 $/opt/tools/vol.sh /data/image.raw
 #Inspect command console runned:
-more /tmp/analyze/dumpcon/*.uni
-more /tmp/analyze/dumpcon/*.floss
+more /tmp/results/conhost-data.uni
+more /tmp/results/conhost-data.floss
 #get more info on pid process
 $python3 /opt/tools/proc-extract.py /tmp/results/vadinfo.json PID_NUMBER
 ```
