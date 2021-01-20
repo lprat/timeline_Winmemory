@@ -86,7 +86,7 @@ You can import timeline in timesketch to make fast analyze:
   - NetUse: Process use network
   - MutantUse: Process use mutant
   - NetBind: Process Bind socket
-  - ProcLegalSuspect: Process legal but can be used to malicious action
+  - ProcLegalSuspect: Process legal but can be used to malicious action, more informations in field "ProcLegalSuspect"
   - ProcSuspect: Process with path or name suspect
   - NotPeInfo: Process or module dont contains PeInfo
   - PeNameDiff: Process or module have name different of Peinfo Original or Internal

@@ -20,6 +20,7 @@ serv_sid={}
 firehol=None
 driverx={}
 driverirpx={}
+procx={}
 
 if os.path.isfile('/db-ipbl.json'):
     with open("/db-ipbl.json", encoding='utf-8') as fp:
@@ -52,6 +53,84 @@ with open("/tmp/results/svcscan-sid.json", encoding='utf-8') as fp:
         serv_sid = json.load(fp)
     except Exception as err:
         print("Error to open: /tmp/results/svcscan-sid.json")
+with open("/tmp/results/psscan.json", encoding='utf-8') as fp:
+    try:
+        ds = json.load(fp)
+        for d in ds:
+            if 'ImageFileName' in d and d['ImageFileName']:
+                if d['ImageFileName'] not in procx:
+                    procx[d['ImageFileName']]={'count': 0, 'multisession': 0, 'PPID': [], 'msg':[]}
+                procx[d['ImageFileName']]['count']+=1
+                if d['ImageFileName'].lower() in ["svchost.exe", "powershell.exe", "regsvr32.exe", "bcdedit.exe", "mshta.exe", "schtasks.exe","wmic.exe", "cmd.exe", "rundll32.exe", "rar.exe", "at.exe",  "psexec", "psloggedon", "procdump", "psexec.exe", "psloggedon.exe", "procdump.exe", "winrm.vbs", "net.exe", "reg.exe", "sc.exe"]:
+                    procx[d['ImageFileName']]['msg'].append('Legitime process can be used for dangerous activity')
+                if 'PPID' in d and d['PPID']:
+                    for dp in ds:
+                        if 'PID' in dp and dp['PID'] and d['PPID'] == dp['PID']
+                            if dp['ImageFileName'].lower() not in procx[d['ImageFileName']]['PPID']:
+                                procx[d['ImageFileName']]['PPID'].append(dp['ImageFileName'].lower())
+    except Exception as err:
+        print("Error to open: /tmp/results/psscan.json")
+#check suspect process based on SANS: https://www.sans.org/security-resources/posters/hunt-evil/165/download
+for k,v in procx.items():
+    if k.lower() == 'system':
+        if v['count'] != 1:
+            v['msg'].append('Number of '+k+' process > 1')
+        if len(v['PPID']) != 0:
+            v['msg'].append('Parent PID ('+' -- '.join(v['PPID'])+') on '+k+' process (should not exist)')
+    elif k.lower() == 'wininit.exe':
+        if v['count'] != 1:
+            v['msg'].append('Number of '+k+' process > 1')
+        if len(v['PPID']) != 0:
+            v['msg'].append('Parent PID ('+' -- '.join(v['PPID'])+') on '+k+' process (should not exist)')
+    elif k.lower() == 'winlogon.exe':
+        if len(v['PPID']) != 0:
+            v['msg'].append('Parent PID ('+' -- '.join(v['PPID'])+') on '+k+' process (should not exist)')
+    elif k.lower() == 'csrss.exe':
+        if len(v['PPID']) != 0:
+            v['msg'].append('Parent PID ('+' -- '.join(v['PPID'])+') on '+k+' process (should not exist)')
+        if v['count'] > 2:
+            v['multisession'] = v['count']-1
+            v['msg'].append(k+' process indicate you have '+str( v['count']-1)+' current sessions')
+    elif k.lower() == 'services.exe':
+        if v['count'] != 1:
+            v['msg'].append('Number of '+k+' process > 1')
+        if len(v['PPID']) != 1:
+            v['msg'].append('Parent PID ('+' -- '.join(v['PPID'])+') on '+k+' process != 1')
+        if 'wininit.exe' not in v['PPID']:
+            v['msg'].append('Parent PID ('+' -- '.join(v['PPID'])+') on '+k+' process != wininit.exe')
+    elif k.lower() == 'svhost.exe':
+        if len(v['PPID']) != 1:
+            v['msg'].append('Parent PID ('+' -- '.join(v['PPID'])+') on '+k+' process != 1')
+        if 'wininit.exe' not in v['PPID']:
+            v['msg'].append('Parent PID ('+' -- '.join(v['PPID'])+') on '+k+' process != services.exe')
+    elif k.lower() == 'lsaiso.exe':
+        if v['count'] != 1:
+            v['msg'].append('Number of '+k+' process > 1')
+        if len(v['PPID']) != 1:
+            v['msg'].append('Parent PID ('+' -- '.join(v['PPID'])+') on '+k+' process != 1')
+        if 'wininit.exe' not in v['PPID']:
+            v['msg'].append('Parent PID ('+' -- '.join(v['PPID'])+') on '+k+' process != wininit.exe')
+    elif k.lower() == 'lsm.exe':
+        if v['count'] != 1:
+            v['msg'].append('Number of '+k+' process > 1')
+        if len(v['PPID']) != 1:
+            v['msg'].append('Parent PID ('+' -- '.join(v['PPID'])+') on '+k+' process != 1')
+        if 'wininit.exe' not in v['PPID']:
+            v['msg'].append('Parent PID ('+' -- '.join(v['PPID'])+') on '+k+' process != wininit.exe')
+    elif k.lower() == 'lsass.exe':
+        if v['count'] != 1:
+            v['msg'].append('Number of '+k+' process > 1')
+        if len(v['PPID']) != 1:
+            v['msg'].append('Parent PID ('+' -- '.join(v['PPID'])+') on '+k+' process != 1')
+        if 'wininit.exe' not in v['PPID']:
+            v['msg'].append('Parent PID ('+' -- '.join(v['PPID'])+') on '+k+' process != wininit.exe')
+    elif k.lower() == 'explorer.exe':
+        if len(v['PPID']) != 0:
+            v['msg'].append('Parent PID ('+' -- '.join(v['PPID'])+') on '+k+' process (should not exist)')
+        if v['count'] > 1:
+            v['multisession'] = v['count']
+            v['msg'].append(k+' process indicate you have '+str( v['count'])+' current sessions')
+
 cfiles={"/tmp/results/psscan.json": "proc", "/tmp/results/cmdline.json": "cmdline", "/tmp/results/env.json": "env", "/tmp/results/netscan.json": "netscan", "/tmp/results/priv.json": "priv", "/tmp/results/handle.json": "handle", "/tmp/results/vadinfo.json": "vad", "/tmp/results/dlllist.json": "dlllist", "/tmp/results/malfind.json": "malfind", "/tmp/results/yara.json": "yara", "/tmp/results/yara-malconf.json": "yara"}
 for k,v in cfiles.items():
     with open(k, encoding='utf-8') as fp:
@@ -386,10 +465,12 @@ for k,v in cfiles.items():
                 if 'CreateTime' in d and d['CreateTime'] and 'CreateTime' not in db[pid]:
                     db[pid]['CreateTime'] = d['CreateTime']
                 if 'ImageFileName' in d and d['ImageFileName'] and 'ImageFileName' not in db[pid]:
-                    db[pid]['ImageFileName'] = d['ImageFileName']
-                    if d['ImageFileName'].lower() in ["svchost.exe", "powershell.exe", "regsvr32.exe", "bcdedit.exe", "mshta.exe", "schtasks.exe","wmic.exe", "cmd.exe", "rundll32.exe"]:
+                    if d['ImageFileName'] in procx and len(procx[d['ImageFileName']]['msg']) > 0:
+                        if 'ProcLegalSuspect' not in db[pid]:
+                            db[pid]['ProcLegalSuspect']=procx[d['ImageFileName']]['msg']
                         if "ProcLegalSuspect" not in db[pid]['tag']:
                             db[pid]['tag'].append("ProcLegalSuspect")
+                    db[pid]['ImageFileName'] = d['ImageFileName']
                 if 'PPID' in d and d['PPID'] and 'PPID' not in db[pid]:
                     db[pid]['PPID'] = d['PPID']
                 if 'SessionId' in d and d['SessionId'] and 'SessionId' not in db[pid]:
