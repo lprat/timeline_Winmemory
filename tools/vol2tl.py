@@ -65,7 +65,7 @@ with open("/tmp/results/psscan.json", encoding='utf-8') as fp:
                     procx[d['ImageFileName']]['msg'].append('Legitime process can be used for dangerous activity')
                 if 'PPID' in d and d['PPID']:
                     for dp in ds:
-                        if 'PID' in dp and dp['PID'] and d['PPID'] == dp['PID']
+                        if 'PID' in dp and dp['PID'] and d['PPID'] == dp['PID']:
                             if dp['ImageFileName'].lower() not in procx[d['ImageFileName']]['PPID']:
                                 procx[d['ImageFileName']]['PPID'].append(dp['ImageFileName'].lower())
     except Exception as err:
