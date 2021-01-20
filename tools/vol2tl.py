@@ -676,6 +676,8 @@ with open("/tmp/results/netscan.json", encoding='utf-8') as fp:
                 jsonl["PORT_DST"] = str(d["ForeignPort"])
             if "LocalAddr" in d and d["LocalAddr"]:
                 jsonl["IP_SRC"] = str(d["LocalAddr"])
+                if 'ForeignAddr' in d and d['ForeignAddr'] and d['ForeignAddr'] != '*' and d['LocalPort'] == 3389:
+                    jsonl['tag'].append("RDPinUse")
             if "LocalPort" in d and d["LocalPort"]:
                 jsonl["PORT_SRC"] = str(d["LocalPort"])
             if "LocalPort" in d and d["LocalPort"]:
