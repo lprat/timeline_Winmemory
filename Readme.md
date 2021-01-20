@@ -31,7 +31,36 @@ If you want use, please get format created by https://github.com/cybersante/Blac
 docker run --rm -ti -v /data/memories_images/:/data/ -v $(pwd)/results:/tmp/results/ timeline_winmemory bash
 (Optionnal use firehol -> docker run --rm -ti -v /data/memories_images/:/data/ -v $(pwd)/db-ipbl.json:/db-ipbl.json -v $(pwd)/results:/tmp/results/ timeline_winmemory bash)
 $/opt/tools/vol.sh /data/image.raw
+#get more info on pid process
+$python3 /opt/tools/proc-extract.py /tmp/results/vadinfo.json PID_NUMBER
 ```
+
+### Features
+
+  - Scan memory with Volatility3
+    - windows.vadinfo.VadInfo
+    - windows.netscan.NetScan
+    - windows.svcscan
+    - windows.getservicesids.GetServiceSIDs
+    - windows.envars.Envars
+    - windows.handles.Handles
+    - windows.privileges.Privs
+    - windows.driverscan
+    - windows.driverirp
+    - windows.cmdline.CmdLine
+    - windows.psscan.PsScan (dump)
+    - windows.modscan.ModScan (dump)
+    - windows.dlllist.DllList (dump)
+    - windows.malfind.Malfind (dump)
+    - windows.vadyarascan.VadYaraScan and yarascan.YaraScan with base.yar
+  - Clamav and LokiScan on all dumped files
+  - Scan virtual memory type 'EXECUTE' of each process with:
+    - PeInfo
+    - Capa
+    - Floss + YARA
+    - ImpScan
+    - ObjDump (disass)
+  - Make time line in json line to upload on timesketch (vol.jsonl)
 
 ## Results
 
