@@ -52,6 +52,14 @@ with open(sys.argv[1]) as fp:
                 print("Yara for proc:"+str(d['PID']))
                 with open('/tmp/results/pid.'+str(d['PID'])+'.vad.'+hex_string+'-'+hex_string2+'.yarafound', "wb") as text_file:
                     text_file.write(stdout2)
+            process = subprocess.Popen(['objdump' ,'-x' ,'-D' ,pathx+'pid.'+str(d['PID'])+'.vad.'+hex_string+'-'+hex_string2+'.dmp'],
+                     stdout=subprocess.PIPE,
+                     stderr=subprocess.PIPE)
+            stdout2, stderr2 = process.communicate()
+            if stdout2:
+                print("ObjDump for proc:"+str(d['PID']))
+                with open('/tmp/results/pid.'+str(d['PID'])+'.vad.'+hex_string+'-'+hex_string2+'.objdump', "wb") as text_file:
+                    text_file.write(stdout2)
             try:
                 pe = pefile.PE(pathx+'pid.'+str(d['PID'])+'.vad.'+hex_string+'-'+hex_string2+'.dmp')
                 files_info = {}
@@ -69,4 +77,4 @@ with open(sys.argv[1]) as fp:
             except pefile.PEFormatError as e:
                 print("[-] PEFormatError: %s" % e.value)
             os.remove(pathx+'pid.'+str(d['PID'])+'.vad.'+hex_string+'-'+hex_string2+'.dmp')
-            os.remove(pathx+'pid.'+str(d['PID'])+'.vad.'+hex_string+'-'+hex_string2+'.floss')
+            #os.remove(pathx+'pid.'+str(d['PID'])+'.vad.'+hex_string+'-'+hex_string2+'.floss')
