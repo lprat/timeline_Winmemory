@@ -252,7 +252,8 @@ with open(sys.argv[1]) as fp:
                                         namedll=kmx.split('\\')[-1]
                                     except:
                                         namedll=kmx
-                                    impscan[v]={'func':'Not found', 'dll':namedll}
+                                    madr="0x%0.2X" % v-vmx['vstart']
+                                    impscan[v]={'func':'Not found'+madr, 'dll':namedll}
                 if peimp:
                     files_info['PEImport']=peimp
                 if peexp:
