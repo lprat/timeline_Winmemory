@@ -7,7 +7,7 @@ import subprocess
 import pefile
 
 if len(sys.argv) != 4:
-    print("./proc_ana.py path/proscan.json imgpath pid")
+    print("./proc_ana.py path/vadinfo.json imgpath pid")
     sys.exit()
 with open(sys.argv[1]) as fp:
     ds = json.load(fp)
