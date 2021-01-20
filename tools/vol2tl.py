@@ -490,6 +490,9 @@ for k,v in cfiles.items():
                     db[pid]['SessionId'] = d['SessionId']
                 if 'Args' in d and d['Args'] and 'cmdline' not in db[pid]:
                     db[pid]['cmdline'] = d['Args']
+                    if '://' in d['Args']:
+                        if "ProcArgsURI" not in db[pid]['tag']:
+                            db[pid]['tag'].append("ProcArgsURI")
                     if not d['Process'].lower().endswith('.exe') or '\\appdata\\' in d['Args'].lower() or '\\users\\' in d['Args'].lower() or re.match(r"[bcdfghjklmnpqrstvwxz0-9]{6}|[aeuoiy0-9]{5}", d['Process'].lower()):
                         if "ProcSuspect" not in db[pid]['tag']:
                             db[pid]['tag'].append("ProcSuspect")
