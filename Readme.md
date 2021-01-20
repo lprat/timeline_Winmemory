@@ -84,6 +84,8 @@ You can import timeline in timesketch to make fast analyze:
   - PeImpScan: Pe impscan, more informations in field "PEImpScan"
   - DllSuspect: Dll with path or name suspect
   - NetUse: Process use network
+  - RDPinUse: RDP connection in progress
+  - NetUseSuspect: A legitimate process uses the network abnormally
   - MutantUse: Process use mutant
   - NetBind: Process Bind socket
   - ProcLegalSuspect: Process legal but can be used to malicious action, more informations in field "ProcLegalSuspect"

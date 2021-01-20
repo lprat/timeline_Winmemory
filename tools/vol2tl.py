@@ -382,6 +382,12 @@ for k,v in cfiles.items():
                             db[pid]['NetUse'] = []
                         if d['Proto']+"|"+d['LocalAddr']+":"+str(d['LocalPort'])+"|"+d['ForeignAddr']+":"+str(d['ForeignPort'])+"|"+d['State'] not in db[pid]['NetUse']:
                             db[pid]['NetUse'].append(d['Proto']+"|"+d['LocalAddr']+":"+str(d['LocalPort'])+"|"+d['ForeignAddr']+":"+str(d['ForeignPort'])+"|"+d['State'])
+                        if d['ForeignAddr'] != '*' and not ipaddress.ip_address(d["ForeignAddr"]).is_private and 'ImageFileName' in db[pid] and db[pid]['ImageFileName'].lower() in ['lsass.exe', 'system', 'svchost.exe']:
+                            if "NetUseSuspect" not in db[pid]['tag']:
+                                db[pid]['tag'].append("NetUseSuspect")
+                        if d['ForeignAddr'] != '*' and d['LocalPort'] == 3389:
+                            if "RDPinUse" not in db[pid]['tag']:
+                                db[pid]['tag'].append("RDPinUse")
                     if "LISTENING" in d['State']:
                         if "NetUse" not in db[pid]['tag']:
                             db[pid]['tag'].append("NetUse")
