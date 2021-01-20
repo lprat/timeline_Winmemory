@@ -163,6 +163,7 @@ timeout -v $timestop python3 /opt/tools/changename.py /tmp/results/psscan.json /
 timeout -v $timestop python /opt/tools/Loki/loki.py --dontwait --intense -l /tmp/results/lokiresults.log -s 100000 -p /tmp/analyze/dump/ --csv > /tmp/results/loki.log 2> /tmp/results/loki.err &
 #Check proc with vad
 mkdir /tmp/analyze/dumpvad/
+mkdir /tmp/analyze/dumpcon/
 timeout -v $timestop python3 /opt/tools/vadinfo.py /tmp/results/vadinfo.json $1 > /tmp/results/vadinfopy.log  2> /tmp/results/vadinfopy.err
 echo "Wait end of process in background $(date)"
 wait

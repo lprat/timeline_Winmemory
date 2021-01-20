@@ -89,6 +89,31 @@ with open(sys.argv[1]) as fp:
             #indicate DLL used and number of func
             modules[pid][d['File']]={'vstart':d['Start VPN'],'vend':d['End VPN']}
     for d in ds:
+        if d['Process'] == 'conhost.exe' and "READWRITE" in d['Protection'] and not d['File'] and d['Start VPN'] != 0:
+            #check command history - strings -t d -e l *.dmp >> conhost.uni (Idea From SANS)
+            print("Extract info from conhost.exe")
+            process = subprocess.Popen(['python3', '/opt/tools/volatility3/vol.py', '-o', '/tmp/analyze/dumpcon/', '-r', 'json', '-f', sys.argv[2], 'windows.vadinfo.VadInfo', '--dump', '--pid', str(d['PID']), '--address', str(d['Start VPN'])],
+                     stdout=subprocess.PIPE,
+                     stderr=subprocess.PIPE)
+            stdout, stderr = process.communicate()
+            hex_string = format(d['Start VPN'], '#04x')
+            hex_string2 = format(d['End VPN'], '#04x')
+            process = subprocess.Popen(['/opt/tools/floss', '/tmp/analyze/dumpcon/pid.'+str(d['PID'])+'.vad.'+hex_string+'-'+hex_string2+'.dmp'],
+                     stdout=subprocess.PIPE,
+                     stderr=subprocess.PIPE)
+            stdout2, stderr2 = process.communicate()
+            if stdout2:
+                print("Floss for proc:"+str(d['PID']))
+                with open('/tmp/analyze/dumpcon/pid.'+str(d['PID'])+'.vad.'+hex_string+'-'+hex_string2+'.floss', "wb") as text_file:
+                    text_file.write(stdout2)
+            process = subprocess.Popen(['strings', '-t', 'd', '-e', 'l', '/tmp/analyze/dumpcon/pid.'+str(d['PID'])+'.vad.'+hex_string+'-'+hex_string2+'.dmp'],
+                     stdout=subprocess.PIPE,
+                     stderr=subprocess.PIPE)
+            stdout2, stderr2 = process.communicate()
+            if stdout2:
+                print("Strings for proc:"+str(d['PID']))
+                with open('/tmp/analyze/dumpcon/pid.'+str(d['PID'])+'.vad.'+hex_string+'-'+hex_string2+'.uni', "wb") as text_file:
+                    text_file.write(stdout2)
         if "PAGE_EXECUTE_READWRITE" in d['Protection'] and not d['File']:
             print(str(d))
             iat_ptr={}
