@@ -17,7 +17,7 @@ with open(sys.argv[1]) as fp:
         if not os.path.isdir('/tmp/analyze/'+str(d['PID'])):
             os.mkdir('/tmp/analyze/'+str(d['PID']))
         pathx='/tmp/analyze/'+str(d['PID'])+'/'
-        if ("READWRITE" in d['Protection']) and not d['File']:
+        if "READWRITE" in d['Protection'] and not d['File']:
             print(str(d))
             if d['Start VPN'] == 0:
                 continue
