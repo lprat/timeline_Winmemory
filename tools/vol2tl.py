@@ -59,10 +59,15 @@ with open("/tmp/results/psscan.json", encoding='utf-8') as fp:
         for d in ds:
             if 'ImageFileName' in d and d['ImageFileName']:
                 if d['ImageFileName'] not in procx:
-                    procx[d['ImageFileName']]={'count': 0, 'multisession': 0, 'PPID': [], 'msg':[]}
+                    procx[d['ImageFileName']]={'count': 0, 'rat': False, 'multisession': 0, 'PPID': [], 'msg':[]}
                 procx[d['ImageFileName']]['count']+=1
                 if d['ImageFileName'].lower() in ["svchost.exe", "powershell.exe", "regsvr32.exe", "bcdedit.exe", "mshta.exe", "schtasks.exe","wmic.exe", "cmd.exe", "rundll32.exe", "rar.exe", "at.exe",  "psexec", "psloggedon", "procdump", "psexec.exe", "psloggedon.exe", "procdump.exe", "winrm.vbs", "net.exe", "reg.exe", "sc.exe"]:
                     procx[d['ImageFileName']]['msg'].append('Legitime process can be used for dangerous activity')
+                rats=['teamviewer','logmein','webex','mikogo','logicnow','ammyy','darkcomet','splashtop','vncviewer','tightvnc','winvnc']
+                for rat in rats:
+                    if rat in d['ImageFileName'].lower():
+                        procx[d['ImageFileName']]['msg'].append('RAT tools in progress')
+                        procx[d['ImageFileName']]['rat']=True
                 if 'PPID' in d and d['PPID']:
                     for dp in ds:
                         if 'PID' in dp and dp['PID'] and d['PPID'] == dp['PID']:
@@ -476,6 +481,8 @@ for k,v in cfiles.items():
                             db[pid]['ProcLegalSuspect']=procx[d['ImageFileName']]['msg']
                         if "ProcLegalSuspect" not in db[pid]['tag']:
                             db[pid]['tag'].append("ProcLegalSuspect")
+                        if procx[d['ImageFileName']]['rat'] and "RATinProgress" not in db[pid]['tag']:
+                            db[pid]['tag'].append("RATinProgress")
                     db[pid]['ImageFileName'] = d['ImageFileName']
                 if 'PPID' in d and d['PPID'] and 'PPID' not in db[pid]:
                     db[pid]['PPID'] = d['PPID']
