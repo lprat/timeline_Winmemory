@@ -51,6 +51,7 @@ $python3 /opt/tools/proc-extract.py /tmp/results/vadinfo.json PID_NUMBER
     - windows.driverscan
     - windows.driverirp
     - windows.cmdline.CmdLine
+    - windows.callbacks.Callbacks
     - windows.psscan.PsScan (dump)
     - windows.modscan.ModScan (dump)
     - windows.dlllist.DllList (dump)
@@ -116,3 +117,4 @@ You can import timeline in timesketch to make fast analyze:
  - apihook
  - https://github.com/hasherezade/pe-sieve/wiki use it on vad extract
  - Proc use driver (handle) make link
+ - windows.callbacks.Callbacks use result

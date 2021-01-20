@@ -139,6 +139,7 @@ timeout -v $timestop python3 /opt/tools/volatility3/vol.py -f $1 -r json windows
 timeout -v $timestop python3 /opt/tools/volatility3/vol.py -f $1 -r json windows.privileges.Privs > /tmp/results/priv.json 2> /tmp/results/priv.err &
 timeout -v $timestop python3 /opt/tools/volatility3/vol.py -f $1 -r json windows.driverscan > /tmp/results/driverscan.json 2> /tmp/results/driverscan.err &
 timeout -v $timestop python3 /opt/tools/volatility3/vol.py -f $1 -r json windows.driverirp > /tmp/results/driverirp.json 2> /tmp/results/driverirp.err &
+timeout -v $timestop python3 /opt/tools/volatility3/vol.py -f $1 -r json windows.callbacks.Callbacks > /tmp/results/callbacks.json 2> /tmp/results/callbacks.err &
 #mem usage:
 #python3 /opt/tools/volatility3/vol.py -f $1 -r json windows.virtmap.VirtMap > /tmp/results/virtmap.json &
 #yara scan mem
