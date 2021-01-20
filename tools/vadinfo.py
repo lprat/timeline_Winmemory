@@ -127,6 +127,14 @@ with open(sys.argv[1]) as fp:
                 print("Yara for proc:"+str(d['PID']))
                 with open('/tmp/results/pid.'+str(d['PID'])+'.vad.'+hex_string+'-'+hex_string2+'.yarafound', "wb") as text_file:
                     text_file.write(stdout2)
+            process = subprocess.Popen(['objdump' ,'-x' ,'-D' ,'/tmp/analyze/dumpvad/pid.'+str(d['PID'])+'.vad.'+hex_string+'-'+hex_string2+'.dmp'],
+                     stdout=subprocess.PIPE,
+                     stderr=subprocess.PIPE)
+            stdout2, stderr2 = process.communicate()
+            if stdout2:
+                print("ObjDump for proc:"+str(d['PID']))
+                with open('/tmp/results/pid.'+str(d['PID'])+'.vad.'+hex_string+'-'+hex_string2+'.objdump', "wb") as text_file:
+                    text_file.write(stdout2)
             try:
                 pe = pefile.PE('/tmp/analyze/dumpvad/pid.'+str(d['PID'])+'.vad.'+hex_string+'-'+hex_string2+'.dmp')
                 files_info = {}
