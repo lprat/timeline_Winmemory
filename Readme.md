@@ -103,6 +103,8 @@ You can import timeline in timesketch to make fast analyze:
   - Linked_with_SuspectDriver: Service realtionship with suspect module
   - Autorun: service runned at windows start
   - Running: service in running
+  - FileDangerous: Suspect file in memory inside home user (can be used for execution malware => pe, script)
+  - FileSuspect: Suspect file in memory inside home user (can be used for initial access)
   - Driver_in_Proc: TODO
 
 ## TODO List:

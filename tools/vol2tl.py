@@ -676,10 +676,10 @@ with open("/tmp/results/netscan.json", encoding='utf-8') as fp:
                 jsonl["PORT_DST"] = str(d["ForeignPort"])
             if "LocalAddr" in d and d["LocalAddr"]:
                 jsonl["IP_SRC"] = str(d["LocalAddr"])
-                if 'ForeignAddr' in d and d['ForeignAddr'] and d['ForeignAddr'] != '*' and d['LocalPort'] == 3389:
-                    jsonl['tag'].append("RDPinUse")
             if "LocalPort" in d and d["LocalPort"]:
                 jsonl["PORT_SRC"] = str(d["LocalPort"])
+                if 'ForeignAddr' in d and d['ForeignAddr'] and d['ForeignAddr'] != '*' and d['LocalPort'] == 3389:
+                    jsonl['tag'].append("RDPinUse")
             if "LocalPort" in d and d["LocalPort"]:
                 jsonl["PORT_SRC"] = str(d["LocalPort"])
             if "Proto" in d and d["Proto"]:
@@ -716,6 +716,48 @@ with open("/tmp/results/netscan.json", encoding='utf-8') as fp:
                 print("%s" % (json.dumps(jsonl)), file=fjsonl)
     except Exception as err:
         print("Error to open: /tmp/results/netscan.json"+" -- "+str(err))
+        traceback.print_exc(file=sys.stdout)
+with open("/tmp/results/filescan.json", encoding='utf-8') as fp:
+    try:
+        ds = json.load(fp)
+        for d in ds:
+            #write direct in jsonl
+            ext=""
+            filename=d['Name']
+            try:
+                filename=d['Name'].split('\\')[-1]
+                ext=d['Name'].split('.')[-1]
+            except:
+                pass
+            jsonl = {"message": d['Name'], "Path": d['Name'], "Filename": filename, "Extension": ext,  "timestamp_desc": "File in memory", "tag":[]}
+            if '\\users\\' in d['Name'].lower() and ext.lower() in ['dll','jse','zip','ps1','exe','vbs','cmd','hta','sys','pif','scr','com','msi','msp','rar','ace','bat','jar','swf','jnlp','cpl']:
+                jsonl["tag"].append('FileDangerous')
+            if '\\users\\' in d['Name'].lower() and ext.lower() in ['rtf','doc','docx','pptx','ppt','xls','xlsx','otf','gadget','appref-ms','application','chm','scf','idx']:
+                jsonl["tag"].append('FileSuspect')
+            if "Offset" in d and d["Offset"]:
+                jsonl["FileOffset"] = str(d["Offset"])
+            date = now
+            if "Created" in d and d["Created"]:
+                # add date of file
+                try:
+                    date = datetime.strptime(d["Created"], "%Y-%m-%dT%H%M%S") #2020-02-07T10:46:52
+                except:
+                    date = now
+                    jsonl["tag"].append("unknown_date")
+            else:
+                try:
+                    date = datetime.strptime(date_deb, "%Y-%m-%dT%H%M%S")
+                except:
+                    date = now
+                jsonl["tag"].append("unknown_date")
+            jsonl["timestamp"] = int(str(int(datetime.timestamp(date)))+"000000")
+            jsonl["file_source"] = sys.argv[1]
+            jsonl["file_generator"] = "Volutility filescan"
+            jsonl["tag"]=list(set(jsonl["tag"]))
+            if jsonl:
+                print("%s" % (json.dumps(jsonl)), file=fjsonl)
+    except Exception as err:
+        print("Error to open: /tmp/results/filescan.json"+" -- "+str(err))
         traceback.print_exc(file=sys.stdout)
 with open("/tmp/results/yaranousedproc.json", encoding='utf-8') as fp:
     try:
