@@ -722,6 +722,8 @@ with open("/tmp/results/netscan.json", encoding='utf-8') as fp:
                     jsonl["firehol"]+=firehol[d["ForeignAddr"]]
                     jsonl["firehol"]=list(set(jsonl["firehol"]))
             jsonl["tag"]=list(set(jsonl["tag"]))
+            if not jsonl["tag"]:
+                del jsonl["tag"]
             if jsonl:
                 print("%s" % (json.dumps(jsonl)), file=fjsonl)
     except Exception as err:
@@ -764,6 +766,8 @@ with open("/tmp/results/filescan.json", encoding='utf-8') as fp:
             jsonl["file_source"] = sys.argv[1]
             jsonl["file_generator"] = "Volutility filescan"
             jsonl["tag"]=list(set(jsonl["tag"]))
+            if not jsonl["tag"]:
+                del jsonl["tag"]
             if jsonl:
                 print("%s" % (json.dumps(jsonl)), file=fjsonl)
     except Exception as err:
@@ -787,6 +791,8 @@ with open("/tmp/results/yaranousedproc.json", encoding='utf-8') as fp:
             jsonl["timestamp"] = int(str(int(datetime.timestamp(date)))+"000000")
             jsonl["file_source"] = sys.argv[1]
             jsonl["file_generator"] = "Volutility Yara out of proc"
+            if not jsonl["tag"]:
+                del jsonl["tag"]
             if jsonl:
                 print("%s" % (json.dumps(jsonl)), file=fjsonl)
     except Exception as err:
@@ -860,6 +866,8 @@ with open("/tmp/results/svcscan.json", encoding='utf-8') as fp:
             jsonl["file_source"] = sys.argv[1]
             jsonl["file_generator"] = "Volutility svcscan"
             jsonl["tag"]=list(set(jsonl["tag"]))
+            if not jsonl["tag"]:
+                del jsonl["tag"]
             if jsonl:
                 print("%s" % (json.dumps(jsonl)), file=fjsonl)
     except Exception as err:
@@ -888,6 +896,8 @@ for k,v in db_mod.items():
     jsonl["file_source"] = sys.argv[1]
     jsonl["file_generator"] = "Volutility modscan"
     jsonl["tag"]=list(set(jsonl["tag"]))
+    if not jsonl["tag"]:
+        del jsonl["tag"]
     if jsonl:
         print("%s" % (json.dumps(jsonl)), file=fjsonl)
 #proc
@@ -911,6 +921,8 @@ for k,v in db.items():
     jsonl["file_source"] = sys.argv[1]
     jsonl["file_generator"] = "Volutility pscan"
     jsonl["tag"]=list(set(jsonl["tag"]))
+    if not jsonl["tag"]:
+        del jsonl["tag"]
     if jsonl:
         print("%s" % (json.dumps(jsonl)), file=fjsonl)
 fjsonl.close()
