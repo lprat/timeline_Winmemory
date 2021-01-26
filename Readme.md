@@ -96,6 +96,7 @@ You can import timeline in timesketch to make fast analyze:
   - ProcLegalSuspect: Process legal but can be used to malicious action, more informations in field "ProcLegalSuspect"
   - ProcSuspect: Process with path or name suspect or argument (b64, ...)
   - ProcArgsURI: Process launched with URI argument
+  - ProcOrphan: Orphan process
   - NotPeInfo: Process or module dont contains PeInfo
   - PeNameDiff: Process or module have name different of Peinfo Original or Internal
   - DllPeNameDiff: Dll have name different of Peinfo Original or Internal

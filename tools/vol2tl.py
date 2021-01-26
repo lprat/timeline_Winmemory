@@ -476,6 +476,9 @@ for k,v in cfiles.items():
                 if 'CreateTime' in d and d['CreateTime'] and 'CreateTime' not in db[pid]:
                     db[pid]['CreateTime'] = d['CreateTime']
                 if 'ImageFileName' in d and d['ImageFileName'] and 'ImageFileName' not in db[pid]:
+                    if d['ImageFileName'] in procx and len(procx[d['ImageFileName']]['PPID']) == 0:
+                        if "ProcOrphan" not in db[pid]['tag']:
+                            db[pid]['tag'].append("ProcOrphan")
                     if d['ImageFileName'] in procx and len(procx[d['ImageFileName']]['msg']) > 0:
                         if 'ProcLegalSuspect' not in db[pid]:
                             db[pid]['ProcLegalSuspect']=procx[d['ImageFileName']]['msg']
