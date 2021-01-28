@@ -128,35 +128,35 @@ mkdir -p /tmp/analyze/dump
 mkdir -p /tmp/analyze/dump-yara
 mkdir -p /tmp/results
 
-timeout -v $timestop python3 /opt/tools/volatility3/vol.py -f $1 -r json windows.vadinfo.VadInfo > /tmp/results/vadinfo.json 2> /tmp/results/vadinfo.err
-timeout -v $timestop python3 /opt/tools/volatility3/vol.py -f $1 -r json windows.netscan.NetScan > /tmp/results/netscan.json  2> /tmp/results/netscan.err &
-timeout -v $timestop python3 /opt/tools/volatility3/vol.py -f $1 -r json windows.filescan.FileScan > /tmp/results/filescan.json 2> /tmp/results/filescan.err &
-timeout -v $timestop python3 /opt/tools/volatility3/vol.py -f $1 -r json windows.svcscan > /tmp/results/svcscan.json 2> /tmp/results/vcscan.err &
-timeout -v $timestop python3 /opt/tools/volatility3/vol.py -f $1 -r json windows.getservicesids.GetServiceSIDs > /tmp/results/svcscan-sid.json 2> /tmp/results/svcscan-sid.err &
-#timeout $timestop python3 /opt/tools/volatility3/vol.py -f $1 windows.pstree.PsTree > /tmp/results/pstree.json 2> /tmp/results/pstree.err &
-timeout -v $timestop python3 /opt/tools/volatility3/vol.py -f $1 -r json windows.envars.Envars > /tmp/results/env.json 2> /tmp/results/env.err &
-timeout -v $timestop python3 /opt/tools/volatility3/vol.py -f $1 -r json windows.handles.Handles > /tmp/results/handle.json 2> /tmp/results/handle.err &
-timeout -v $timestop python3 /opt/tools/volatility3/vol.py -f $1 -r json windows.privileges.Privs > /tmp/results/priv.json 2> /tmp/results/priv.err &
-timeout -v $timestop python3 /opt/tools/volatility3/vol.py -f $1 -r json windows.driverscan > /tmp/results/driverscan.json 2> /tmp/results/driverscan.err &
-timeout -v $timestop python3 /opt/tools/volatility3/vol.py -f $1 -r json windows.driverirp > /tmp/results/driverirp.json 2> /tmp/results/driverirp.err &
-timeout -v $timestop python3 /opt/tools/volatility3/vol.py -f $1 -r json windows.callbacks.Callbacks > /tmp/results/callbacks.json 2> /tmp/results/callbacks.err &
+timeout -v $timestop python3 /opt/tools/volatility3/vol.py -q -f $1 -r json windows.vadinfo.VadInfo > /tmp/results/vadinfo.json 2> /tmp/results/vadinfo.err
+timeout -v $timestop python3 /opt/tools/volatility3/vol.py -q -f $1 -r json windows.netscan.NetScan > /tmp/results/netscan.json  2> /tmp/results/netscan.err &
+timeout -v $timestop python3 /opt/tools/volatility3/vol.py -q -f $1 -r json windows.filescan.FileScan > /tmp/results/filescan.json 2> /tmp/results/filescan.err &
+timeout -v $timestop python3 /opt/tools/volatility3/vol.py -q -f $1 -r json windows.svcscan > /tmp/results/svcscan.json 2> /tmp/results/vcscan.err &
+timeout -v $timestop python3 /opt/tools/volatility3/vol.py -q -f $1 -r json windows.getservicesids.GetServiceSIDs > /tmp/results/svcscan-sid.json 2> /tmp/results/svcscan-sid.err &
+#timeout $timestop python3 /opt/tools/volatility3/vol.py -q -f $1 windows.pstree.PsTree > /tmp/results/pstree.json 2> /tmp/results/pstree.err &
+timeout -v $timestop python3 /opt/tools/volatility3/vol.py -q -f $1 -r json windows.envars.Envars > /tmp/results/env.json 2> /tmp/results/env.err &
+timeout -v $timestop python3 /opt/tools/volatility3/vol.py -q -f $1 -r json windows.handles.Handles > /tmp/results/handle.json 2> /tmp/results/handle.err &
+timeout -v $timestop python3 /opt/tools/volatility3/vol.py -q -f $1 -r json windows.privileges.Privs > /tmp/results/priv.json 2> /tmp/results/priv.err &
+timeout -v $timestop python3 /opt/tools/volatility3/vol.py -q -f $1 -r json windows.driverscan > /tmp/results/driverscan.json 2> /tmp/results/driverscan.err &
+timeout -v $timestop python3 /opt/tools/volatility3/vol.py -q -f $1 -r json windows.driverirp > /tmp/results/driverirp.json 2> /tmp/results/driverirp.err &
+timeout -v $timestop python3 /opt/tools/volatility3/vol.py -q -f $1 -r json windows.callbacks.Callbacks > /tmp/results/callbacks.json 2> /tmp/results/callbacks.err &
 #mem usage:
 #python3 /opt/tools/volatility3/vol.py -f $1 -r json windows.virtmap.VirtMap > /tmp/results/virtmap.json &
 #yara scan mem
-(timeout -v $timestop python3 /opt/tools/volatility3/vol.py -r json -f $1 windows.vadyarascan.VadYaraScan --wide --yara-file /opt/rules/base.yar > /tmp/results/yara.json  2> /tmp/results/yara.err  )&
-(timeout -v $timestop python3 /opt/tools/volatility3/vol.py -r json -f $1 windows.vadyarascan.VadYaraScan --wide --yara-file /opt/rules/malconfscan.yar > /tmp/results/yara-malconf.json 2> /tmp/results/yara-malconf.err  )&
+(timeout -v $timestop python3 /opt/tools/volatility3/vol.py -q -r json -f $1 windows.vadyarascan.VadYaraScan --wide --yara-file /opt/rules/base.yar > /tmp/results/yara.json  2> /tmp/results/yara.err  )&
+(timeout -v $timestop python3 /opt/tools/volatility3/vol.py -q -r json -f $1 windows.vadyarascan.VadYaraScan --wide --yara-file /opt/rules/malconfscan.yar > /tmp/results/yara-malconf.json 2> /tmp/results/yara-malconf.err  )&
 #yara scan mem no used by proc
-(timeout -v $timestop python3 /opt/tools/volatility3/vol.py -r json -f $1 yarascan.YaraScan --wide --yara-file /opt/rules/base.yar > /tmp/results/yaranousedproc.json  2> /tmp/results/yaranousedproc.err  )&
+(timeout -v $timestop python3 /opt/tools/volatility3/vol.py -q -r json -f $1 yarascan.YaraScan --wide --yara-file /opt/rules/base.yar > /tmp/results/yaranousedproc.json  2> /tmp/results/yaranousedproc.err  )&
 #process lancé avec la ligne de commande
-timeout -v $timestop python3 /opt/tools/volatility3/vol.py -f $1 -r json windows.cmdline.CmdLine  > /tmp/results/cmdline.json 2> /tmp/results/cmdline.err &
-timeout -v $timestop python3 /opt/tools/volatility3/vol.py -r json -o /tmp/analyze/dump/ -f $1 windows.psscan.PsScan --dump > /tmp/results/psscan.json 2> /tmp/results/psscan.err
+timeout -v $timestop python3 /opt/tools/volatility3/vol.py -q -f $1 -r json windows.cmdline.CmdLine  > /tmp/results/cmdline.json 2> /tmp/results/cmdline.err &
+timeout -v $timestop python3 /opt/tools/volatility3/vol.py -q -r json -o /tmp/analyze/dump/ -f $1 windows.psscan.PsScan --dump > /tmp/results/psscan.json 2> /tmp/results/psscan.err
 if [ $? -eq 1 ]
 then
-timeout -v $timestop python3 /opt/tools/volatility3/vol.py -r json -o /tmp/analyze/dump/ -f $1 windows.pslist --dump > /tmp/results/psscan.json 2> /tmp/results/psscan2.err
+timeout -v $timestop python3 /opt/tools/volatility3/vol.py --q r json -o /tmp/analyze/dump/ -f $1 windows.pslist --dump > /tmp/results/psscan.json 2> /tmp/results/psscan2.err
 fi
-timeout -v $timestop python3 /opt/tools/volatility3/vol.py -o /tmp/analyze/dump/ -r json -f $1 windows.modscan.ModScan --dump > /tmp/results/modscan.json 2> /tmp/results/modscan.err
-timeout -v $timestop python3 /opt/tools/volatility3/vol.py -o /tmp/analyze/dump/ -r json -f $1 windows.dlllist.DllList --dump > /tmp/results/dlllist.json 2> /tmp/results/dlllist.err
-timeout -v $timestop python3 /opt/tools/volatility3/vol.py -f $1 -o /tmp/analyze/dump/ -r json  windows.malfind.Malfind --dump > /tmp/results/malfind.json 2> /tmp/results/malfind.err
+timeout -v $timestop python3 /opt/tools/volatility3/vol.py -q -o /tmp/analyze/dump/ -r json -f $1 windows.modscan.ModScan --dump > /tmp/results/modscan.json 2> /tmp/results/modscan.err
+timeout -v $timestop python3 /opt/tools/volatility3/vol.py -q -o /tmp/analyze/dump/ -r json -f $1 windows.dlllist.DllList --dump > /tmp/results/dlllist.json 2> /tmp/results/dlllist.err
+timeout -v $timestop python3 /opt/tools/volatility3/vol.py -q -f $1 -o /tmp/analyze/dump/ -r json  windows.malfind.Malfind --dump > /tmp/results/malfind.json 2> /tmp/results/malfind.err
 #rename file
 timeout -v $timestop python3 /opt/tools/changename.py /tmp/results/psscan.json /tmp/analyze/dump/ > /tmp/results/changename.log  2> /tmp/results/changename.err
 #scan file
