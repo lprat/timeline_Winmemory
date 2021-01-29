@@ -158,7 +158,7 @@ timeout -v $timestop python3 /opt/tools/volatility3/vol.py -q -f $1 -r json wind
 timeout -v $timestop python3 /opt/tools/volatility3/vol.py -q -r json -o /tmp/analyze/dump/ -f $1 windows.psscan.PsScan --dump > /tmp/results/psscan.json 2> /tmp/results/psscan.err
 if [ $? -eq 1 ]
 then
-timeout -v $timestop python3 /opt/tools/volatility3/vol.py --q r json -o /tmp/analyze/dump/ -f $1 windows.pslist --dump > /tmp/results/psscan.json 2> /tmp/results/psscan2.err
+timeout -v $timestop python3 /opt/tools/volatility3/vol.py -q -r json -o /tmp/analyze/dump/ -f $1 windows.pslist --dump > /tmp/results/psscan.json 2> /tmp/results/psscan2.err
 fi
 timeout -v $timestop python3 /opt/tools/volatility3/vol.py -q -o /tmp/analyze/dump/ -r json -f $1 windows.modscan.ModScan --dump > /tmp/results/modscan.json 2> /tmp/results/modscan.err
 timeout -v $timestop python3 /opt/tools/volatility3/vol.py -q -o /tmp/analyze/dump/ -r json -f $1 windows.dlllist.DllList --dump > /tmp/results/dlllist.json 2> /tmp/results/dlllist.err
