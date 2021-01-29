@@ -221,14 +221,14 @@ fi
 timeout -v $timestop python3 /opt/tools/volatility3/vol.py -q -r json -f $1 windows.vadyarascan.VadYaraScan --wide --yara-file /opt/rules/base.yar > /tmp/results/yara.json  2> /tmp/results/yara.err
 if [ $? -eq 1 ]
 then
-  timeout -v $timestop python3 /opt/tools/volatility3/vol.py -q -r json -f $1 windows.vadyarascan.VadYaraScan --wide --yara-file /opt/rules/base.yar > /tmp/results/yara.json  2> /tmp/results/yara2.err
+  timeout -v $timestop python3 /opt/tools/volatility3/vol.py -q --no-fail -r json -f $1 windows.vadyarascan.VadYaraScan --wide --yara-file /opt/rules/base.yar > /tmp/results/yara.json  2> /tmp/results/yara2.err
 fi
 }&
 {
 timeout -v $timestop python3 /opt/tools/volatility3/vol.py -q -r json -f $1 windows.vadyarascan.VadYaraScan --wide --yara-file /opt/rules/malconfscan.yar > /tmp/results/yara-malconf.json 2> /tmp/results/yara-malconf.err
 if [ $? -eq 1 ]
 then
-  timeout -v $timestop python3 /opt/tools/volatility3/vol.py -q -r json -f $1 windows.vadyarascan.VadYaraScan --wide --yara-file /opt/rules/malconfscan.yar > /tmp/results/yara-malconf.json 2> /tmp/results/yara-malconf2.err
+  timeout -v $timestop python3 /opt/tools/volatility3/vol.py -q --no-fail -r json -f $1 windows.vadyarascan.VadYaraScan --wide --yara-file /opt/rules/malconfscan.yar > /tmp/results/yara-malconf.json 2> /tmp/results/yara-malconf2.err
 fi
 }&
 #yara scan mem no used by proc
@@ -236,7 +236,7 @@ fi
 timeout -v $timestop python3 /opt/tools/volatility3/vol.py -q -r json -f $1 yarascan.YaraScan --wide --yara-file /opt/rules/base.yar > /tmp/results/yaranousedproc.json  2> /tmp/results/yaranousedproc.err
 if [ $? -eq 1 ]
 then
-  timeout -v $timestop python3 /opt/tools/volatility3/vol.py -q -r json -f $1 yarascan.YaraScan --wide --yara-file /opt/rules/base.yar > /tmp/results/yaranousedproc.json  2> /tmp/results/yaranousedproc2.err
+  timeout -v $timestop python3 /opt/tools/volatility3/vol.py -q --no-fail -r json -f $1 yarascan.YaraScan --wide --yara-file /opt/rules/base.yar > /tmp/results/yaranousedproc.json  2> /tmp/results/yaranousedproc2.err
 fi
 }&
 #process lancé avec la ligne de commande
