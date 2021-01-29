@@ -40,7 +40,6 @@ vol3update(){
 	patch -i /tmp/patchvol3 /opt/tools/volatility3/volatility3/cli/text_renderer.py
   patch -i /tmp/patchvol3_dll /opt/tools/volatility3/volatility3/framework/plugins/windows/dlllist.py
   cd /opt/tools/volatility3/volatility3/symbols/
-  RUN mkdir /tmp/vol3/ && cd /tmp/vol3 && \
   curl -fL https://downloads.volatilityfoundation.org/volatility3/symbols/linux.zip -o linux.zip     && \
   unzip linux.zip                                                                                    && \
   curl -fL https://downloads.volatilityfoundation.org/volatility3/symbols/mac.zip -o mac.zip         && \
