@@ -37,9 +37,16 @@ vol3update(){
   rm -rf volatility3
   git clone https://github.com/volatilityfoundation/volatility3
   pip3 install -U capstone pefile yara-python
-	patch -i /tmp/patchvol3 /opt/tools/volatility3/volatility/cli/text_renderer.py
-  patch -i /tmp/patchvol3_dll /opt/tools/volatility3/volatility/framework/plugins/windows/dlllist.py
-  cp -R /tmp/vol3/ /opt/tools/volatility3/volatility/symbols/
+	patch -i /tmp/patchvol3 /opt/tools/volatility3/volatility3/cli/text_renderer.py
+  patch -i /tmp/patchvol3_dll /opt/tools/volatility3/volatility3/framework/plugins/windows/dlllist.py
+  cd /opt/tools/volatility3/volatility3/symbols/
+  RUN mkdir /tmp/vol3/ && cd /tmp/vol3 && \
+  curl -fL https://downloads.volatilityfoundation.org/volatility3/symbols/linux.zip -o linux.zip     && \
+  unzip linux.zip                                                                                    && \
+  curl -fL https://downloads.volatilityfoundation.org/volatility3/symbols/mac.zip -o mac.zip         && \
+  unzip mac.zip                                                                                      && \
+  curl -fL https://downloads.volatilityfoundation.org/volatility3/symbols/windows.zip -o windows.zip && \
+  unzip windows.zip
 	popd
 }
 

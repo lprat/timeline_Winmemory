@@ -52,13 +52,13 @@ RUN cd /tmp && \
     python3 setup.py install
 
 
-RUN mkdir /tmp/vol3/ && cd /tmp/vol3 && \
-   curl -fL https://downloads.volatilityfoundation.org/volatility3/symbols/linux.zip -o linux.zip     && \
-    unzip linux.zip                                                                                    && \
-    curl -fL https://downloads.volatilityfoundation.org/volatility3/symbols/mac.zip -o mac.zip         && \
-    unzip mac.zip                                                                                      && \
-    curl -fL https://downloads.volatilityfoundation.org/volatility3/symbols/windows.zip -o windows.zip && \
-    unzip windows.zip
+#RUN mkdir /tmp/vol3/ && cd /tmp/vol3 && \
+#   curl -fL https://downloads.volatilityfoundation.org/volatility3/symbols/linux.zip -o linux.zip     && \
+#    unzip linux.zip                                                                                    && \
+#    curl -fL https://downloads.volatilityfoundation.org/volatility3/symbols/mac.zip -o mac.zip         && \
+#    unzip mac.zip                                                                                      && \
+#    curl -fL https://downloads.volatilityfoundation.org/volatility3/symbols/windows.zip -o windows.zip && \
+#    unzip windows.zip
 
 #clamfresh
 RUN freshclam
