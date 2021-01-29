@@ -45,13 +45,6 @@ RUN pip install yara-python psutil netaddr pylzma colorama
 RUN pip3 install wheel
 RUN pip3 install -U pefile capstone distorm3 iocextract pycryptodome jsonschema
 
-RUN cd /tmp && \
-    git clone --recursive https://github.com/VirusTotal/yara-python && \
-    cd yara-python                                                  && \
-    python3 setup.py build && \
-    python3 setup.py install
-
-
 #RUN mkdir /tmp/vol3/ && cd /tmp/vol3 && \
 #   curl -fL https://downloads.volatilityfoundation.org/volatility3/symbols/linux.zip -o linux.zip     && \
 #    unzip linux.zip                                                                                    && \
@@ -64,6 +57,12 @@ RUN cd /tmp && \
 RUN freshclam
 
 RUN cd /tmp && git clone https://github.com/VirusTotal/yara && cd yara && ./build.sh && make install
+RUN cd /tmp && \
+    git clone --recursive https://github.com/VirusTotal/yara-python && \
+    cd yara-python                                                  && \
+    python3 setup.py build && \
+    python3 setup.py install
+
 #Add rules
 RUN mkdir /opt/rules/
 ADD rules /opt/rules/
