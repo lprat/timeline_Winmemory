@@ -905,7 +905,12 @@ for k,v in db_mod.items():
         print("%s" % (json.dumps(jsonl)), file=fjsonl)
 #proc
 for k,v in db.items():
-    jsonl = {"message": 'PID: '+str(k)+' -- '+v['ImageFileName']+' -- '+v['cmdline'], "timestamp_desc": "Process"}
+    msg='PID: '+str(k)
+    if 'ImageFileName' in v and v['ImageFileName']:
+        msg+=' -- '+v['ImageFileName']
+    if 'cmdline' in v and v['cmdline']:
+        msg+=' -- '+v['cmdline']
+    jsonl = {"message": msg, "timestamp_desc": "Process"}
     date = now
     try:
         if 'CreateTime' in v and v['CreateTime']:
