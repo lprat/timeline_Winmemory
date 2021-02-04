@@ -678,7 +678,25 @@ with open("/tmp/results/netscan.json", encoding='utf-8') as fp:
         ds = json.load(fp)
         for d in ds:
             #write direct in jsonl
-            jsonl = {"message": '('+d['Proto']+')'+d['LocalAddr']+':'+str(d['LocalPort'])+'--'+d['State']+'-->'+d['ForeignAddr']+':'+str(d['ForeignPort']), "timestamp_desc": "Netstat", "tag":[]}
+            proto = 'unknown'
+            if d['Proto']:
+                proto = str(d['Proto'])
+            srcip = 'unknown'
+            if d['LocalAddr']:
+                srcip = str(d['LocalAddr'])
+            srcport = 'unknown'
+            if d['LocalPort']:
+                srcport = str(d['LocalPort'])
+            dstip = 'unknown'
+            if d['ForeignAddr']:
+                dstip = str(d['ForeignAddr'])
+            dstport = 'unknown'
+            if d['ForeignPort']:
+                dstport = str(d['ForeignPort'])
+            state = 'unknown'
+            if d['State']:
+                state = str(d['State'])
+            jsonl = {"message": '('+proto+')'+srcip+':'+srcport+'--'+stat+'-->'+dstip+':'+dstport, "timestamp_desc": "Netstat", "tag":[]}
             if "PID" in d and d["PID"]:
                 jsonl["PID"] = str(d["PID"])
             if "Owner" in d and d["Owner"] and d["Owner"] != "*":
