@@ -385,12 +385,30 @@ for k,v in cfiles.items():
                             db[pid]['tag'].append("NetUse")
                         if 'NetUse' not in db[pid]:
                             db[pid]['NetUse'] = []
-                        if d['Proto']+"|"+d['LocalAddr']+":"+str(d['LocalPort'])+"|"+d['ForeignAddr']+":"+str(d['ForeignPort'])+"|"+d['State'] not in db[pid]['NetUse']:
-                            db[pid]['NetUse'].append(d['Proto']+"|"+d['LocalAddr']+":"+str(d['LocalPort'])+"|"+d['ForeignAddr']+":"+str(d['ForeignPort'])+"|"+d['State'])
-                        if d['ForeignAddr'] != '*' and not ipaddress.ip_address(d["ForeignAddr"]).is_private and 'ImageFileName' in db[pid] and db[pid]['ImageFileName'].lower() in ['lsass.exe', 'system', 'svchost.exe']:
+                        nproto = 'unknown'
+                        if d['Proto']:
+                            nproto = str(d['Proto'])
+                        nsrcip = 'unknown'
+                        if d['LocalAddr']:
+                            nsrcip = str(d['LocalAddr'])
+                        nsrcport = 'unknown'
+                        if d['LocalPort']:
+                            nsrcport = str(d['LocalPort'])
+                        ndstip = 'unknown'
+                        if d['ForeignAddr']:
+                            ndstip = str(d['ForeignAddr'])
+                        ndstport = 'unknown'
+                        if d['ForeignPort']:
+                            ndstport = str(d['ForeignPort'])
+                        nstate = 'unknown'
+                        if d['State']:
+                            nstate = str(d['State'])
+                        if nproto+"|"+nsrcip+":"+nsrcport+"|"+ndstip+":"+ndstport+"|"+nstate not in db[pid]['NetUse']:
+                            db[pid]['NetUse'].append(nproto+"|"+nsrcip+":"+nsrcport+"|"+ndstip+":"+ndstport+"|"+nstate)
+                        if d['ForeignAddr'] and d['ForeignAddr'] != '*' and not ipaddress.ip_address(d["ForeignAddr"]).is_private and 'ImageFileName' in db[pid] and db[pid]['ImageFileName'].lower() in ['lsass.exe', 'system', 'svchost.exe']:
                             if "NetUseSuspect" not in db[pid]['tag']:
                                 db[pid]['tag'].append("NetUseSuspect")
-                        if d['ForeignAddr'] != '*' and d['LocalPort'] == 3389:
+                        if d['ForeignAddr'] and d['ForeignAddr'] != '*' and d['LocalPort'] == 3389:
                             if "RDPinUse" not in db[pid]['tag']:
                                 db[pid]['tag'].append("RDPinUse")
                     if "LISTENING" in d['State']:
@@ -402,7 +420,7 @@ for k,v in cfiles.items():
                             db[pid]['NetBind'].append(d['Proto']+"|"+d['LocalAddr']+":"+str(d['LocalPort']))
                     #firehol
                     if firehol:
-                        if d["ForeignAddr"] != '*' and not ipaddress.ip_address(d["ForeignAddr"]).is_private and d["ForeignAddr"] in firehol:
+                        if d["ForeignAddr"] and d["ForeignAddr"] != '*' and not ipaddress.ip_address(d["ForeignAddr"]).is_private and d["ForeignAddr"] in firehol:
                             if "Firehol" not in db[pid]['tag']:
                                 db[pid]['tag'].append("Firehol")
                             if not 'firehol' in db[pid]:
@@ -736,7 +754,7 @@ with open("/tmp/results/netscan.json", encoding='utf-8') as fp:
             jsonl["file_generator"] = "Volutility netscan"
             #firehol
             if firehol:
-                if d["ForeignAddr"] != '*' and not ipaddress.ip_address(d["ForeignAddr"]).is_private and d["ForeignAddr"] in firehol:
+                if d["ForeignAddr"] and d["ForeignAddr"] != '*' and not ipaddress.ip_address(d["ForeignAddr"]).is_private and d["ForeignAddr"] in firehol:
                     jsonl["tag"].append("Firehol")
                     if not 'firehol' in jsonl:
                         jsonl["firehol"] = []
