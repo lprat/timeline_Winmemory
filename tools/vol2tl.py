@@ -696,7 +696,7 @@ with open("/tmp/results/netscan.json", encoding='utf-8') as fp:
             state = 'unknown'
             if d['State']:
                 state = str(d['State'])
-            jsonl = {"message": '('+proto+')'+srcip+':'+srcport+'--'+stat+'-->'+dstip+':'+dstport, "timestamp_desc": "Netstat", "tag":[]}
+            jsonl = {"message": '('+proto+')'+srcip+':'+srcport+'--'+state+'-->'+dstip+':'+dstport, "timestamp_desc": "Netstat", "tag":[]}
             if "PID" in d and d["PID"]:
                 jsonl["PID"] = str(d["PID"])
             if "Owner" in d and d["Owner"] and d["Owner"] != "*":
