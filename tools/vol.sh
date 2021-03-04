@@ -38,8 +38,8 @@ vol3update(){
   git clone https://github.com/volatilityfoundation/volatility3
   git config --global user.name 'lionel'
   git config --global user.email 'lionel@'
-  wget -O /tmp/patch.442 https://patch-diff.githubusercontent.com/raw/volatilityfoundation/volatility3/pull/442.patch
-  cd volatility3 && git am /tmp/patch.442 && cd ..
+  wget -O /tmp/patch.465 https://patch-diff.githubusercontent.com/raw/volatilityfoundation/volatility3/pull/465.patch
+  cd volatility3 && git am /tmp/patch.465 && cd ..
   pip3 install -U capstone pefile yara-python
 	patch -i /tmp/patchvol3 /opt/tools/volatility3/volatility3/cli/text_renderer.py
   patch -i /tmp/patchvol3_dll /opt/tools/volatility3/volatility3/framework/plugins/windows/dlllist.py
