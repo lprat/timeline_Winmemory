@@ -313,7 +313,11 @@ for k,v in cfiles.items():
                                 if peimp:
                                     if 'PEImport' not in db[pid]:
                                         db[pid]['PEImport'] = []
-                                    files_info['PEImport'] = peimp
+                                    speimp=peimp.split(" -> ")
+                                    if len(speimp) == 2 and (re.match(r"[bcdfghjklmnpqrstvwxz]{5}", speimp[1].lower()) or re.match(r"[aeuoiy]{5}", speimp[1].lower())):
+                                        files_info['PEImport'] = peimp
+                                    else:
+                                        files_info['PEImport'] = speimp[0]
                                     files_info['PEImport']=list(set(files_info['PEImport']))
                                 if peexp:
                                     if 'PEExport' not in db[pid]:
@@ -456,7 +460,11 @@ for k,v in cfiles.items():
                             if peimp:
                                 if 'PEImport' not in db[pid]:
                                     db[pid]['PEImport'] = []
-                                db[pid]['PEImport'] = peimp
+                                speimp=peimp.split(" -> ")
+                                if len(speimp) == 2 and (re.match(r"[bcdfghjklmnpqrstvwxz]{5}", speimp[1].lower()) or re.match(r"[aeuoiy]{5}", speimp[1].lower())):
+                                    db[pid]['PEImport'] = peimp
+                                else:
+                                    db[pid]['PEImport'] = speimp[0]
                                 db[pid]['PEImport']=list(set(db[pid]['PEImport']))
                             if peexp:
                                 if 'PEExport' not in db[pid]:
@@ -588,7 +596,13 @@ with open("/tmp/results/modscan.json", encoding='utf-8') as fp:
                 if peimp:
                     if 'PEImport' not in db_mod[d['Path']]:
                         db_mod[d['Path']]['PEImport'] = []
-                    db_mod[d['Path']]['PEImport'] = peimp
+                    #keep suspect name (func or )
+                    #keep
+                    speimp=peimp.split(" -> ")
+                    if len(speimp) == 2 and (re.match(r"[bcdfghjklmnpqrstvwxz]{5}", speimp[1].lower()) or re.match(r"[aeuoiy]{5}", speimp[1].lower())):
+                        db_mod[d['Path']]['PEImport'] = peimp
+                    else:
+                        db_mod[d['Path']]['PEImport'] = speimp[0]
                     db_mod[d['Path']]['PEImport']=list(set(db_mod[d['Path']]['PEImport']))
                 if peexp:
                     if 'PEExport' not in db_mod[d['Path']]:
