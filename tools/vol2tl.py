@@ -763,7 +763,24 @@ with open("/tmp/results/netscan.json", encoding='utf-8') as fp:
                 except:
                     date = now
                 jsonl["tag"].append("unknown_date")
-            jsonl["timestamp"] = int(str(int(datetime.timestamp(date)))+"000000")
+            #jsonl["timestamp"] = int(str(int(datetime.timestamp(date)))+"000000")
+            tmpdate=str(datetime.timestamp(date))
+            if '.' in tmpdate:
+                tmpdate=tmpdate.split('.')[0]
+            if len(tmpdate) == 16:
+                jsonl["timestamp"] = int(tmpdate)
+            elif len(tmpdate) > 16:
+                jsonl["timestamp"] = int(tmpdate[0:16])
+            elif len(tmpdate) == 13:
+                jsonl["timestamp"] = int(tmpdate)
+            elif len(tmpdate) < 10:
+                jsonl["timestamp"] = int(tmpdate)
+            elif len(tmpdate) > 13:
+                nopx=16-len(tmpdate)
+                jsonl["timestamp"] = int(tmpdate+('0'*nopx))
+            elif len(tmpdate) > 9:
+                nopx=13-len(tmpdate)
+                jsonl["timestamp"] = int(tmpdate+('0'*nopx))
             jsonl["file_source"] = sys.argv[1]
             jsonl["file_generator"] = "Volutility netscan"
             #firehol
@@ -815,7 +832,24 @@ with open("/tmp/results/filescan.json", encoding='utf-8') as fp:
                 except:
                     date = now
                 jsonl["tag"].append("unknown_date")
-            jsonl["timestamp"] = int(str(int(datetime.timestamp(date)))+"000000")
+            #jsonl["timestamp"] = int(str(int(datetime.timestamp(date)))+"000000")
+            tmpdate=str(datetime.timestamp(date))
+            if '.' in tmpdate:
+                tmpdate=tmpdate.split('.')[0]
+            if len(tmpdate) == 16:
+                jsonl["timestamp"] = int(tmpdate)
+            elif len(tmpdate) > 16:
+                jsonl["timestamp"] = int(tmpdate[0:16])
+            elif len(tmpdate) == 13:
+                jsonl["timestamp"] = int(tmpdate)
+            elif len(tmpdate) < 10:
+                jsonl["timestamp"] = int(tmpdate)
+            elif len(tmpdate) > 13:
+                nopx=16-len(tmpdate)
+                jsonl["timestamp"] = int(tmpdate+('0'*nopx))
+            elif len(tmpdate) > 9:
+                nopx=13-len(tmpdate)
+                jsonl["timestamp"] = int(tmpdate+('0'*nopx))
             jsonl["file_source"] = sys.argv[1]
             jsonl["file_generator"] = "Volutility filescan"
             jsonl["tag"]=list(set(jsonl["tag"]))
@@ -841,7 +875,24 @@ with open("/tmp/results/yaranousedproc.json", encoding='utf-8') as fp:
                 date = datetime.strptime(date_deb, "%Y-%m-%dT%H%M%S")
             except:
                 date = now
-            jsonl["timestamp"] = int(str(int(datetime.timestamp(date)))+"000000")
+            #jsonl["timestamp"] = int(str(int(datetime.timestamp(date)))+"000000")
+            tmpdate=str(datetime.timestamp(date))
+            if '.' in tmpdate:
+                tmpdate=tmpdate.split('.')[0]
+            if len(tmpdate) == 16:
+                jsonl["timestamp"] = int(tmpdate)
+            elif len(tmpdate) > 16:
+                jsonl["timestamp"] = int(tmpdate[0:16])
+            elif len(tmpdate) == 13:
+                jsonl["timestamp"] = int(tmpdate)
+            elif len(tmpdate) < 10:
+                jsonl["timestamp"] = int(tmpdate)
+            elif len(tmpdate) > 13:
+                nopx=16-len(tmpdate)
+                jsonl["timestamp"] = int(tmpdate+('0'*nopx))
+            elif len(tmpdate) > 9:
+                nopx=13-len(tmpdate)
+                jsonl["timestamp"] = int(tmpdate+('0'*nopx))
             jsonl["file_source"] = sys.argv[1]
             jsonl["file_generator"] = "Volutility Yara out of proc"
             if not jsonl["tag"]:
@@ -915,7 +966,24 @@ with open("/tmp/results/svcscan.json", encoding='utf-8') as fp:
                 if d["State"] == "SERVICE_RUNNING":
                     jsonl["tag"].append("Running")
             date = now
-            jsonl["timestamp"] = int(str(int(datetime.timestamp(date)))+"000000")
+            #jsonl["timestamp"] = int(str(int(datetime.timestamp(date)))+"000000")
+            tmpdate=str(datetime.timestamp(date))
+            if '.' in tmpdate:
+                tmpdate=tmpdate.split('.')[0]
+            if len(tmpdate) == 16:
+                jsonl["timestamp"] = int(tmpdate)
+            elif len(tmpdate) > 16:
+                jsonl["timestamp"] = int(tmpdate[0:16])
+            elif len(tmpdate) == 13:
+                jsonl["timestamp"] = int(tmpdate)
+            elif len(tmpdate) < 10:
+                jsonl["timestamp"] = int(tmpdate)
+            elif len(tmpdate) > 13:
+                nopx=16-len(tmpdate)
+                jsonl["timestamp"] = int(tmpdate+('0'*nopx))
+            elif len(tmpdate) > 9:
+                nopx=13-len(tmpdate)
+                jsonl["timestamp"] = int(tmpdate+('0'*nopx))
             jsonl["file_source"] = sys.argv[1]
             jsonl["file_generator"] = "Volutility svcscan"
             jsonl["tag"]=list(set(jsonl["tag"]))
@@ -945,7 +1013,24 @@ for k,v in db_mod.items():
             jsonl[kx] = str(vx)
             continue
         jsonl[kx] = vx
-    jsonl["timestamp"] = int(str(int(datetime.timestamp(date)))+"000000")
+    #jsonl["timestamp"] = int(str(int(datetime.timestamp(date)))+"000000")
+    tmpdate=str(datetime.timestamp(date))
+    if '.' in tmpdate:
+        tmpdate=tmpdate.split('.')[0]
+    if len(tmpdate) == 16:
+        jsonl["timestamp"] = int(tmpdate)
+    elif len(tmpdate) > 16:
+        jsonl["timestamp"] = int(tmpdate[0:16])
+    elif len(tmpdate) == 13:
+        jsonl["timestamp"] = int(tmpdate)
+    elif len(tmpdate) < 10:
+        jsonl["timestamp"] = int(tmpdate)
+    elif len(tmpdate) > 13:
+        nopx=16-len(tmpdate)
+        jsonl["timestamp"] = int(tmpdate+('0'*nopx))
+    elif len(tmpdate) > 9:
+        nopx=13-len(tmpdate)
+        jsonl["timestamp"] = int(tmpdate+('0'*nopx))
     jsonl["file_source"] = sys.argv[1]
     jsonl["file_generator"] = "Volutility modscan"
     jsonl["tag"]=list(set(jsonl["tag"]))
@@ -975,7 +1060,24 @@ for k,v in db.items():
             jsonl[kx] = str(vx)
             continue
         jsonl[kx] = vx
-    jsonl["timestamp"] = int(str(int(datetime.timestamp(date)))+"000000")
+    #jsonl["timestamp"] = int(str(int(datetime.timestamp(date)))+"000000")
+    tmpdate=str(datetime.timestamp(date))
+    if '.' in tmpdate:
+        tmpdate=tmpdate.split('.')[0]
+    if len(tmpdate) == 16:
+        jsonl["timestamp"] = int(tmpdate)
+    elif len(tmpdate) > 16:
+        jsonl["timestamp"] = int(tmpdate[0:16])
+    elif len(tmpdate) == 13:
+        jsonl["timestamp"] = int(tmpdate)
+    elif len(tmpdate) < 10:
+        jsonl["timestamp"] = int(tmpdate)
+    elif len(tmpdate) > 13:
+        nopx=16-len(tmpdate)
+        jsonl["timestamp"] = int(tmpdate+('0'*nopx))
+    elif len(tmpdate) > 9:
+        nopx=13-len(tmpdate)
+        jsonl["timestamp"] = int(tmpdate+('0'*nopx))
     jsonl["file_source"] = sys.argv[1]
     jsonl["file_generator"] = "Volutility pscan"
     jsonl["tag"]=list(set(jsonl["tag"]))
