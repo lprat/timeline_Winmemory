@@ -36,12 +36,9 @@ vol3update(){
 	pushd /opt/tools
   rm -rf volatility3
   git clone https://github.com/volatilityfoundation/volatility3
-  git config --global user.name 'lionel'
-  git config --global user.email 'lionel@'
-  wget -O /tmp/patch.465 https://patch-diff.githubusercontent.com/raw/volatilityfoundation/volatility3/pull/465.patch
-  cd volatility3 && git am /tmp/patch.465 && cd ..
   pip3 install -U capstone pefile yara-python
-	patch -i /tmp/patchvol3 /opt/tools/volatility3/volatility3/cli/text_renderer.py
+  patch -i /tmp/patchvol3_nofail /opt/tools/volatility3/volatility3/cli/__init__.py
+  patch -i /tmp/patchvol3 /opt/tools/volatility3/volatility3/cli/text_renderer.py
   patch -i /tmp/patchvol3_dll /opt/tools/volatility3/volatility3/framework/plugins/windows/dlllist.py
   cd /opt/tools/volatility3/volatility3/symbols/
   curl -fL https://downloads.volatilityfoundation.org/volatility3/symbols/linux.zip -o linux.zip     && \
