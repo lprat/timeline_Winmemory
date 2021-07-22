@@ -14,7 +14,7 @@
                  file_handle.write(data)
          except (IOError, exceptions.VolatilityException, OverflowError, ValueError) as excp:
 -            vollog.debug(f"Unable to dump dll at offset {dll_entry.DllBase}: {excp}")
-+            vollog.debug(f"Unable to dump dll at offset {}".format(excp))
++            vollog.debug(f"Unable to dump dll at offset {excp}")
              return None
          return file_handle
 
