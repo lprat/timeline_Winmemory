@@ -269,6 +269,9 @@ if [ $? -eq 1 ]
 then
   timeout -v $timestop python3 /opt/tools/volatility3/vol.py -q --no-fail -f $1 -o /tmp/analyze/dump/ -r json  windows.malfind.Malfind --dump > /tmp/results/malfind.json 2> /tmp/results/malfind2.err
 fi
+#extra
+#timeout -v $timestop strings --radix=x $1 |grep "chaine" > /tmp/results/strings_file.txt
+#timeout -v $timestop python3 /opt/tools/volatility3/vol.py -q --no-fail -f $1  windows.strings.Strings --strings-file /tmp/results/strings_file.txt > /tmp/results/strings.json 2> /tmp/results/strings.err
 #rename file
 timeout -v $timestop python3 /opt/tools/changename.py /tmp/results/psscan.json /tmp/analyze/dump/ > /tmp/results/changename.log  2> /tmp/results/changename.err
 #scan file
