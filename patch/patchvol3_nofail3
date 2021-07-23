@@ -1,0 +1,9 @@
+--- a/volatility3/framework/constants/__init__.py
++++ b/volatility3/framework/constants/__init__.py
+@@ -92,3 +92,6 @@ class Parallelism(enum.IntEnum):
+ """The minimum supported version of the Intermediate Symbol Format"""
+ ISF_MINIMUM_DEPRECATED = (3, 9, 9)
+ """The highest version of the ISF that's deprecated (usually higher than supported)"""
++
++FAIL_ON_ERROR = True
++"""Default value to fail on error"""
