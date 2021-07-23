@@ -77,6 +77,8 @@ ADD tools/vol2tl.py /opt/tools/
 ADD patch/patchvol3 /tmp/
 ADD patch/patchvol3_dll /tmp/
 ADD patch/patchvol3_nofail /tmp/
+ADD patch/patchvol3_nofail2 /tmp/
+ADD patch/patchvol3_nofail3 /tmp/
 RUN chmod +x /opt/tools/vol.sh
 RUN ldconfig
 # Clean up
