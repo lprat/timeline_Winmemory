@@ -749,38 +749,22 @@ with open("/tmp/results/netscan.json", encoding='utf-8') as fp:
                 jsonl["Protocol"] = str(d["Proto"])
             if "State" in d and d["State"]:
                 jsonl["State"] = str(d["State"])
-            date = now
+            datex = now
             if "Created" in d and d["Created"]:
                 # add date of file
                 try:
-                    date = datetime.strptime(d["Created"], "%Y-%m-%dT%H%M%S") #2020-02-07T10:46:52
+                    datex = datetime.strptime(d["Created"], "%Y-%m-%dT%H%M%S") #2020-02-07T10:46:52
                 except:
-                    date = now
+                    datex = now
                     jsonl["tag"].append("unknown_date")
             else:
                 try:
-                    date = datetime.strptime(date_deb, "%Y-%m-%dT%H%M%S")
+                    datex = datetime.strptime(date_deb, "%Y-%m-%dT%H%M%S")
                 except:
-                    date = now
+                    datex = now
                 jsonl["tag"].append("unknown_date")
             #jsonl["timestamp"] = int(str(int(datetime.timestamp(date)))+"000000")
-            tmpdate=str(datetime.timestamp(date))
-            if '.' in tmpdate:
-                tmpdate=tmpdate.split('.')[0]
-            if len(tmpdate) == 16:
-                jsonl["timestamp"] = int(tmpdate)
-            elif len(tmpdate) > 16:
-                jsonl["timestamp"] = int(tmpdate[0:16])
-            elif len(tmpdate) == 13:
-                jsonl["timestamp"] = int(tmpdate)
-            elif len(tmpdate) < 10:
-                jsonl["timestamp"] = int(tmpdate)
-            elif len(tmpdate) > 13:
-                nopx=16-len(tmpdate)
-                jsonl["timestamp"] = int(tmpdate+('0'*nopx))
-            elif len(tmpdate) > 9:
-                nopx=13-len(tmpdate)
-                jsonl["timestamp"] = int(tmpdate+('0'*nopx))
+            jsonl["datetime"] = datex.strftime('%Y-%m-%dT%H:%M:%S.%f')
             jsonl["file_source"] = sys.argv[1]
             jsonl["file_generator"] = "Volutility netscan"
             #firehol
@@ -818,38 +802,22 @@ with open("/tmp/results/filescan.json", encoding='utf-8') as fp:
                 jsonl["tag"].append('FileSuspect')
             if "Offset" in d and d["Offset"]:
                 jsonl["FileOffset"] = str(d["Offset"])
-            date = now
+            datex = now
             if "Created" in d and d["Created"]:
                 # add date of file
                 try:
-                    date = datetime.strptime(d["Created"], "%Y-%m-%dT%H%M%S") #2020-02-07T10:46:52
+                    datex = datetime.strptime(d["Created"], "%Y-%m-%dT%H%M%S") #2020-02-07T10:46:52
                 except:
-                    date = now
+                    datex = now
                     jsonl["tag"].append("unknown_date")
             else:
                 try:
-                    date = datetime.strptime(date_deb, "%Y-%m-%dT%H%M%S")
+                    datex = datetime.strptime(date_deb, "%Y-%m-%dT%H%M%S")
                 except:
-                    date = now
+                    datex = now
                 jsonl["tag"].append("unknown_date")
             #jsonl["timestamp"] = int(str(int(datetime.timestamp(date)))+"000000")
-            tmpdate=str(datetime.timestamp(date))
-            if '.' in tmpdate:
-                tmpdate=tmpdate.split('.')[0]
-            if len(tmpdate) == 16:
-                jsonl["timestamp"] = int(tmpdate)
-            elif len(tmpdate) > 16:
-                jsonl["timestamp"] = int(tmpdate[0:16])
-            elif len(tmpdate) == 13:
-                jsonl["timestamp"] = int(tmpdate)
-            elif len(tmpdate) < 10:
-                jsonl["timestamp"] = int(tmpdate)
-            elif len(tmpdate) > 13:
-                nopx=16-len(tmpdate)
-                jsonl["timestamp"] = int(tmpdate+('0'*nopx))
-            elif len(tmpdate) > 9:
-                nopx=13-len(tmpdate)
-                jsonl["timestamp"] = int(tmpdate+('0'*nopx))
+            jsonl["datetime"] = datex.strftime('%Y-%m-%dT%H:%M:%S.%f')
             jsonl["file_source"] = sys.argv[1]
             jsonl["file_generator"] = "Volutility filescan"
             jsonl["tag"]=list(set(jsonl["tag"]))
@@ -870,29 +838,13 @@ with open("/tmp/results/yaranousedproc.json", encoding='utf-8') as fp:
             jsonl["Yara_offset"] = str(d["Offset"])
             jsonl["Yara_ValueHex"] = d["Value"]
             jsonl["Yara_ValueAscii"] = bytes.fromhex(d['Value'].replace('00','').replace(' ','')).decode('utf-8',"ignore")
-            date = now
+            datex = now
             try:
-                date = datetime.strptime(date_deb, "%Y-%m-%dT%H%M%S")
+                datex = datetime.strptime(date_deb, "%Y-%m-%dT%H%M%S")
             except:
-                date = now
+                datex = now
             #jsonl["timestamp"] = int(str(int(datetime.timestamp(date)))+"000000")
-            tmpdate=str(datetime.timestamp(date))
-            if '.' in tmpdate:
-                tmpdate=tmpdate.split('.')[0]
-            if len(tmpdate) == 16:
-                jsonl["timestamp"] = int(tmpdate)
-            elif len(tmpdate) > 16:
-                jsonl["timestamp"] = int(tmpdate[0:16])
-            elif len(tmpdate) == 13:
-                jsonl["timestamp"] = int(tmpdate)
-            elif len(tmpdate) < 10:
-                jsonl["timestamp"] = int(tmpdate)
-            elif len(tmpdate) > 13:
-                nopx=16-len(tmpdate)
-                jsonl["timestamp"] = int(tmpdate+('0'*nopx))
-            elif len(tmpdate) > 9:
-                nopx=13-len(tmpdate)
-                jsonl["timestamp"] = int(tmpdate+('0'*nopx))
+            jsonl["datetime"] = datex.strftime('%Y-%m-%dT%H:%M:%S.%f')
             jsonl["file_source"] = sys.argv[1]
             jsonl["file_generator"] = "Volutility Yara out of proc"
             if not jsonl["tag"]:
@@ -965,25 +917,9 @@ with open("/tmp/results/svcscan.json", encoding='utf-8') as fp:
                 jsonl["State"] = str(d["State"])
                 if d["State"] == "SERVICE_RUNNING":
                     jsonl["tag"].append("Running")
-            date = now
+            datex = now
             #jsonl["timestamp"] = int(str(int(datetime.timestamp(date)))+"000000")
-            tmpdate=str(datetime.timestamp(date))
-            if '.' in tmpdate:
-                tmpdate=tmpdate.split('.')[0]
-            if len(tmpdate) == 16:
-                jsonl["timestamp"] = int(tmpdate)
-            elif len(tmpdate) > 16:
-                jsonl["timestamp"] = int(tmpdate[0:16])
-            elif len(tmpdate) == 13:
-                jsonl["timestamp"] = int(tmpdate)
-            elif len(tmpdate) < 10:
-                jsonl["timestamp"] = int(tmpdate)
-            elif len(tmpdate) > 13:
-                nopx=16-len(tmpdate)
-                jsonl["timestamp"] = int(tmpdate+('0'*nopx))
-            elif len(tmpdate) > 9:
-                nopx=13-len(tmpdate)
-                jsonl["timestamp"] = int(tmpdate+('0'*nopx))
+            jsonl["datetime"] = datex.strftime('%Y-%m-%dT%H:%M:%S.%f')
             jsonl["file_source"] = sys.argv[1]
             jsonl["file_generator"] = "Volutility svcscan"
             jsonl["tag"]=list(set(jsonl["tag"]))
@@ -997,14 +933,14 @@ with open("/tmp/results/svcscan.json", encoding='utf-8') as fp:
 #modx
 for k,v in db_mod.items():
     jsonl = {"message": k, "timestamp_desc": "Module"}
-    date = now
+    datex = now
     try:
         if 'CreateTime' in v and v['CreateTime']:
-            date = datetime.strptime(v['Createtime'], "%Y-%m-%dT%H%M%S")
+            datex = datetime.strptime(v['Createtime'], "%Y-%m-%dT%H%M%S")
         elif date_deb:
-            date = datetime.strptime(date_deb, "%Y-%m-%dT%H%M%S")
+            datex = datetime.strptime(date_deb, "%Y-%m-%dT%H%M%S")
     except:
-        date = now
+        datex = now
     jsonl['Path'] = str(k)
     for kx,vx in v.items():
         if kx == 'File':
@@ -1014,23 +950,7 @@ for k,v in db_mod.items():
             continue
         jsonl[kx] = vx
     #jsonl["timestamp"] = int(str(int(datetime.timestamp(date)))+"000000")
-    tmpdate=str(datetime.timestamp(date))
-    if '.' in tmpdate:
-        tmpdate=tmpdate.split('.')[0]
-    if len(tmpdate) == 16:
-        jsonl["timestamp"] = int(tmpdate)
-    elif len(tmpdate) > 16:
-        jsonl["timestamp"] = int(tmpdate[0:16])
-    elif len(tmpdate) == 13:
-        jsonl["timestamp"] = int(tmpdate)
-    elif len(tmpdate) < 10:
-        jsonl["timestamp"] = int(tmpdate)
-    elif len(tmpdate) > 13:
-        nopx=16-len(tmpdate)
-        jsonl["timestamp"] = int(tmpdate+('0'*nopx))
-    elif len(tmpdate) > 9:
-        nopx=13-len(tmpdate)
-        jsonl["timestamp"] = int(tmpdate+('0'*nopx))
+    jsonl["datetime"] = datex.strftime('%Y-%m-%dT%H:%M:%S.%f')
     jsonl["file_source"] = sys.argv[1]
     jsonl["file_generator"] = "Volutility modscan"
     jsonl["tag"]=list(set(jsonl["tag"]))
@@ -1046,14 +966,14 @@ for k,v in db.items():
     if 'cmdline' in v and v['cmdline']:
         msg+=' -- '+v['cmdline']
     jsonl = {"message": msg, "timestamp_desc": "Process"}
-    date = now
+    datex = now
     try:
         if 'CreateTime' in v and v['CreateTime']:
-            date = datetime.strptime(v['Createtime'], "%Y-%m-%dT%H%M%S")
+            datex = datetime.strptime(v['Createtime'], "%Y-%m-%dT%H%M%S")
         elif date_deb:
-            date = datetime.strptime(date_deb, "%Y-%m-%dT%H%M%S")
+            datex = datetime.strptime(date_deb, "%Y-%m-%dT%H%M%S")
     except:
-        date = now
+        datex = now
     jsonl['PID'] = str(k)
     for kx,vx in v.items():
         if isinstance(vx, int):
@@ -1061,23 +981,7 @@ for k,v in db.items():
             continue
         jsonl[kx] = vx
     #jsonl["timestamp"] = int(str(int(datetime.timestamp(date)))+"000000")
-    tmpdate=str(datetime.timestamp(date))
-    if '.' in tmpdate:
-        tmpdate=tmpdate.split('.')[0]
-    if len(tmpdate) == 16:
-        jsonl["timestamp"] = int(tmpdate)
-    elif len(tmpdate) > 16:
-        jsonl["timestamp"] = int(tmpdate[0:16])
-    elif len(tmpdate) == 13:
-        jsonl["timestamp"] = int(tmpdate)
-    elif len(tmpdate) < 10:
-        jsonl["timestamp"] = int(tmpdate)
-    elif len(tmpdate) > 13:
-        nopx=16-len(tmpdate)
-        jsonl["timestamp"] = int(tmpdate+('0'*nopx))
-    elif len(tmpdate) > 9:
-        nopx=13-len(tmpdate)
-        jsonl["timestamp"] = int(tmpdate+('0'*nopx))
+    jsonl["datetime"] = datex.strftime('%Y-%m-%dT%H:%M:%S.%f')
     jsonl["file_source"] = sys.argv[1]
     jsonl["file_generator"] = "Volutility pscan"
     jsonl["tag"]=list(set(jsonl["tag"]))
