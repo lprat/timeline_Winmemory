@@ -1,37 +1,43 @@
---- /opt/volatility3/volatility/framework/plugins/windows/dlllist.py.old	2021-01-12 17:11:06.639408513 +0000
-+++ /opt/volatility3/volatility/framework/plugins/windows/dlllist.py	2021-01-12 17:39:13.917983379 +0000
-@@ -72,7 +72,7 @@
+--- ../volatility3.ori/volatility3/framework/plugins/windows/dlllist.py	2021-09-21 07:14:11.679463996 +0000
++++ ../volatility3/volatility3/framework/plugins/windows/dlllist.py	2021-09-21 07:28:26.461063256 +0000
+@@ -70,8 +70,11 @@
              if layer_name is None:
                  layer_name = dll_entry.vol.layer_name
-
+ 
 -            file_handle = open_method("{}{}.{:#x}.{:#x}.dmp".format(prefix, ntpath.basename(name), dll_entry.vol.offset,
-+            file_handle = open_method("{}{}.{:#x}.{:#x}.dmp".format(prefix, ntpath.basename(name).encode("utf8","ignore").decode("ascii","ignore"), dll_entry.vol.offset,
-                                                                     dll_entry.DllBase))
-
+-                                                                    dll_entry.DllBase))
++            #file_handle = open_method("{}{}.{:#x}.{:#x}.dmp".format(prefix, ntpath.basename(name), dll_entry.vol.offset,
++            #                                                        dll_entry.DllBase))
++            file_handle = open_method("{}{}.{:#x}.{:#x}.dmp".format(prefix, ntpath.basename(name).encode("utf8","ignore").decode("ascii","ignore"),
++                                                                     dll_entry.vol.offset,
++                                                                     dll_entry.DllBase))
+ 
              dos_header = context.object(pe_table_name + constants.BANG + "_IMAGE_DOS_HEADER",
-@@ -83,7 +83,7 @@
+                                         offset = dll_entry.DllBase,
+@@ -81,7 +84,8 @@
                  file_handle.seek(offset)
                  file_handle.write(data)
          except (IOError, exceptions.VolatilityException, OverflowError, ValueError) as excp:
 -            vollog.debug(f"Unable to dump dll at offset {dll_entry.DllBase}: {excp}")
++            #vollog.debug(f"Unable to dump dll at offset {dll_entry.DllBase}: {excp}")
 +            vollog.debug(f"Unable to dump dll at offset {excp}")
              return None
          return file_handle
-
-@@ -136,12 +136,14 @@
-                     if file_handle:
-                         file_handle.close()
-                         file_output = file_handle.preferred_filename
+ 
+@@ -146,12 +150,14 @@
+                     size_of_image = format_hints.Hex(entry.SizeOfImage)
+                 except exceptions.InvalidAddressException:
+                     size_of_image = renderers.NotAvailableValue()
 -
 -                yield (0, (proc.UniqueProcessId,
 +                try:
 +                    yield (0, (proc.UniqueProcessId,
                             proc.ImageFileName.cast("string",
                                                     max_length = proc.ImageFileName.vol.count,
-                                                    errors = 'replace'), format_hints.Hex(entry.DllBase),
-                            format_hints.Hex(entry.SizeOfImage), BaseDllName, FullDllName, DllLoadTime, file_output))
+                                                    errors = 'replace'), dllbase, size_of_image, BaseDllName,
+                            FullDllName, DllLoadTime, file_output))
 +                except:
 +                    continue
-
+ 
      def generate_timeline(self):
-         for row in self._generator(
+         kernel = self.context.modules[self.config['kernel']]
