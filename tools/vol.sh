@@ -34,14 +34,23 @@ lokiupdate(){
 #volatility update
 vol3update(){
 	pushd /opt/tools
-  rm -rf volatility3
-  git clone https://github.com/volatilityfoundation/volatility3
-  pip3 install -U capstone pefile yara-python
-  patch -i /tmp/patchvol3_nofail /opt/tools/volatility3/volatility3/cli/__init__.py
-  patch -i /tmp/patchvol3_nofail2 /opt/tools/volatility3/volatility3/cli/text_renderer.py
-  patch -i /tmp/patchvol3_nofail3 /opt/tools/volatility3/volatility3/framework/constants/__init__.py
-  patch -i /tmp/patchvol3 /opt/tools/volatility3/volatility3/cli/text_renderer.py
-  patch -i /tmp/patchvol3_dll /opt/tools/volatility3/volatility3/framework/plugins/windows/dlllist.py
+  mv volatility3 volatility3.old
+  git clone https://github.com/volatilityfoundation/volatility3 && \
+  pip3 install -U capstone pefile yara-python && \
+  patch -i /tmp/patchvol3_nofail /opt/tools/volatility3/volatility3/cli/__init__.py && \
+  patch -i /tmp/patchvol3_nofail2 /opt/tools/volatility3/volatility3/cli/text_renderer.py && \
+  patch -i /tmp/patchvol3_nofail3 /opt/tools/volatility3/volatility3/framework/constants/__init__.py && \
+  patch -i /tmp/patchvol3 /opt/tools/volatility3/volatility3/cli/text_renderer.py && \
+  patch -i /tmp/patchvol3_dll /opt/tools/volatility3/volatility3/framework/plugins/windows/dlllist.py && \
+  touch /tmp/patch_ok
+  if [ ! -f /tmp/patch_ok ]; then
+    echo "Patch error get old version"
+    rm -rf volatility3
+    mv volatility3.old volatility3
+  else
+    rm /tmp/patch_ok
+    rm -rf volatility3.old
+  fi
   cd /opt/tools/volatility3/volatility3/symbols/
   curl -fL https://downloads.volatilityfoundation.org/volatility3/symbols/linux.zip -o linux.zip     && \
   unzip linux.zip                                                                                    && \
