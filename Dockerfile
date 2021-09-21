@@ -79,6 +79,7 @@ ADD patch/patchvol3_dll /tmp/
 ADD patch/patchvol3_nofail /tmp/
 ADD patch/patchvol3_nofail2 /tmp/
 ADD patch/patchvol3_nofail3 /tmp/
+RUN cd /opt/tools/ && git clone https://github.com/volatilityfoundation/volatility3 && pip3 install -U capstone pefile yara-python && patch -i /tmp/patchvol3_nofail /opt/tools/volatility3/volatility3/cli/__init__.py && patch -i /tmp/patchvol3_nofail2 /opt/tools/volatility3/volatility3/cli/text_renderer.py && patch -i /tmp/patchvol3_nofail3 /opt/tools/volatility3/volatility3/framework/constants/__init__.py && patch -i /tmp/patchvol3 /opt/tools/volatility3/volatility3/cli/text_renderer.py && patch -i /tmp/patchvol3_dll /opt/tools/volatility3/volatility3/framework/plugins/windows/dlllist.py
 RUN chmod +x /opt/tools/vol.sh
 RUN ldconfig
 # Clean up
