@@ -70,7 +70,7 @@ flossinstall(){
 }
 capainstall(){
 	pushd /opt/tools
-	curl -s https://api.github.com/repos/fireeye/capa/releases/latest \
+	curl -s https://api.github.com/repos/mandiant/capa/releases/latest \
    | grep "http.*capa.*linux.zip" \
    | cut -d : -f 2,3 \
    | tr -d \" \
