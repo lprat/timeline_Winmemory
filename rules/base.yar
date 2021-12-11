@@ -168,6 +168,16 @@ rule elte_ImportTableFnc_Http {
     or pe.imports("wininet.dll", "IdHTTPHeaderInfo")
 }
 
+rule url_in_proc {
+        meta:
+          author = "Lionel PRAT"
+          desc = "Detect URL in proc"
+        strings:
+            $uri = /(https?|ftp):\/\/([0-9A-Za-z][0-9A-Za-z-]{0,62})(\.([0-9A-Za-z][0-9A-Za-z-]{0,62}))*(\.?|\b)/ wide nocase
+        condition:
+            $uri
+}
+
 rule uri_on_remote_ip {
         meta:
           author = "Lionel PRAT"
