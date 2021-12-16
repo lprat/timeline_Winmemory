@@ -179,6 +179,13 @@ then
   timeout -v $timestop python3 /opt/tools/volatility3/vol.py -q --no-fail -f $1 -r json windows.getservicesids.GetServiceSIDs > /tmp/results/svcscan-sid.json 2> /tmp/results/svcscan-sid2.err
 fi
 }&
+{
+timeout -v $timestop python3 /opt/tools/volatility3/vol.py -q -f $1 -r json windows.getsids.GetSIDs > /tmp/results/proc-sid.json 2> /tmp/results/proc-sid.err
+if [ $? -eq 1 ]
+then
+  timeout -v $timestop python3 /opt/tools/volatility3/vol.py -q --no-fail -f $1 -r json windows.getsids.GetSIDs > /tmp/results/proc-sid.json 2> /tmp/results/proc-sid2.err
+fi
+}&
 #timeout $timestop python3 /opt/tools/volatility3/vol.py -q -f $1 windows.pstree.PsTree > /tmp/results/pstree.json 2> /tmp/results/pstree.err &
 {
 timeout -v $timestop python3 /opt/tools/volatility3/vol.py -q -f $1 -r json windows.envars.Envars > /tmp/results/env.json 2> /tmp/results/env.err
