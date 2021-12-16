@@ -21,6 +21,7 @@ firehol=None
 driverx={}
 driverirpx={}
 procx={}
+procpid={}
 
 if os.path.isfile('/db-ipbl.json'):
     with open("/db-ipbl.json", encoding='utf-8') as fp:
@@ -47,7 +48,20 @@ with open("/tmp/results/driverirp.json", encoding='utf-8') as fp:
     try:
         driverirpx = json.load(fp)
     except Exception as err:
-        print("Error to open: /tmp/results/driverirp.json ")
+        print("Error to open: /tmp/results/driverirp.json")
+with open("/tmp/results/proc-sid.json", encoding='utf-8') as fp:
+    try:
+        procsid_tmp = json.load(fp)
+        for item in items:
+            if 'PID' in item and 'SID' in item and 'Name' in item:
+                if item['pid'] not in procpid:
+                    procpid[item['pid']] = {'names':[],'SID':[]}
+                if item['Name'] not in procpid[item['pid']]['names']:
+                    procpid[item['pid']]['names'].append(item['Name'])
+                if item['SID'] not in procpid[item['pid']]['SID']:
+                    procpid[item['pid']]['SID'].append(item['SID'])
+    except Exception as err:
+        print("Error to open: /tmp/results/proc-sid.json")
 with open("/tmp/results/svcscan-sid.json", encoding='utf-8') as fp:
     try:
         serv_sid = json.load(fp)
@@ -980,6 +994,9 @@ for k,v in db.items():
             jsonl[kx] = str(vx)
             continue
         jsonl[kx] = vx
+    if jsonl['PID'] in procpid:
+        jsonl['SID_names']=procpid[item['pid']]['names']
+        jsonl['SIDs']=procpid[item['pid']]['SID']
     #jsonl["timestamp"] = int(str(int(datetime.timestamp(date)))+"000000")
     jsonl["datetime"] = datex.strftime('%Y-%m-%dT%H:%M:%S.%f')
     jsonl["file_source"] = sys.argv[1]
