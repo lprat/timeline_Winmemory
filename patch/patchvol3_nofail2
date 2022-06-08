@@ -22,10 +22,10 @@
              return accumulator
  
          if not grid.populated:
--            grid.populate(visitor, outfd)
-+            grid.populate(visitor, outfd, fail_on_errors=constants.FAIL_ON_ERROR)
+-            grid.populate(visitor, writer)
++            grid.populate(visitor, writer, fail_on_errors=constants.FAIL_ON_ERROR)
          else:
-             grid.visit(node = None, function = visitor, initial_accumulator = outfd)
+             grid.visit(node = None, function = visitor, initial_accumulator = writer)
  
 @@ -280,7 +280,7 @@ def visitor(
  
