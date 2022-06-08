@@ -29,7 +29,7 @@
  
 @@ -280,7 +280,7 @@ def visitor(
  
-         final_output = []  # type: List[Tuple[int, Dict[interfaces.renderers.Column, bytes]]]
+         final_output: List[Tuple[int, Dict[interfaces.renderers.Column, bytes]]] = []
          if not grid.populated:
 -            grid.populate(visitor, final_output)
 +            grid.populate(visitor, final_output, fail_on_errors=constants.FAIL_ON_ERROR)
