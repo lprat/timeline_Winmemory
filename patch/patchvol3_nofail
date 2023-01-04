@@ -21,4 +21,3 @@
          if partial_args.log:
              file_logger = logging.FileHandler(partial_args.log)
              file_logger.setLevel(1)
-
